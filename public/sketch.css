@@ -1,0 +1,12 @@
+#draw {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+#canvas {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
