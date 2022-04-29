@@ -1,19 +1,21 @@
 //p5js functions:
 
 //false = pen equipped, true = eraser equipped
-
 let eraser = false;
 let r = 0;
 let g = 0;
 let b = 0;
+let c;
 
 function setup() {
-    let c = createCanvas(windowWidth * 0.7, windowHeight * 0.7)
+    c = createCanvas(900, 600)
+    background(255, 255, 255);
     c.parent('canvas')
     equipPencil();
 }
 function draw() {
     if(mouseIsPressed) {
+
         if (eraser){
             stroke(255, 255, 255);
         } else{
@@ -47,4 +49,8 @@ function equipPencil(){
     eraser = false;
     strokeWeight(7);
     cursor('resources/pencil.png')
+}
+
+function saveDrawing(prompt){
+    saveCanvas(c, prompt, "png")
 }

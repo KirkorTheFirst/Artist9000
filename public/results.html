@@ -9,9 +9,12 @@
   <body>
     <div class="container">
         <div class="title">Final Guess</div>
+        <div id="guess">
+            <img width="450" height="300">
+        </div>
         <table id="closest">
             <tr>
-                <th id="final">idk man</th>
+                <th><span id="final">idk man</span></th>
             </tr>
             <tr>
                 <td id="filler"></td>
@@ -55,12 +58,17 @@
 
     <script>
 
+        let givenPrompt2 = sessionStorage.getItem("prompt");
+
+        document.getElementById("final").innerHTML = givenPrompt2;
+
         document.getElementById("back").onclick = function () {
             window.location.href = 'sketch.html';
         }
         document.getElementById("back2").onclick = function () {
             window.location.href = 'index.html';
         }
+
     </script>
   </body>
 </html>
