@@ -25,8 +25,10 @@
         <button id="submit" class="submit">I'm done!</button>
       </div>
     </div>
-    
     <script>
+      //we probably want to add an eventlistener to the canvas that sees when the mouse has been pressed, and then we can transfer the drawing into an array. 
+      //I dont ken how to set the drawing to be of a max of 256 pixels. i guess if it is over just subtract or divide or something?
+      //thus, because this will probably be long, maybe move this all to another file?
       let prompts = [
         'line',
         'triangle',
@@ -42,6 +44,17 @@
         'spoon',
         'fork',
       ];
+      let canvas = document.getElementById('canvas')
+      canvas.addEventListener('mousedown', recordMouseClicks)
+      let initMouseX = null
+      let initMouseY = null
+      let canvasBeenClicked = false
+      function recordMouseClicks() {
+        if(!canvasBeenClicked) {
+          
+        }
+      }
+        
 
       givenPrompt = prompts[Math.floor(Math.random() * prompts.length)];
       document.getElementById("prompt").innerHTML = givenPrompt;
