@@ -1,3 +1,7 @@
+* {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
 #closest { 
     grid-column: 2 / 3;
     text-align: center;
@@ -15,4 +19,12 @@ td#filler{
 
 #final {
     font-size: 34px;
+}
+
+#guess {
+    grid-column: 2 / 3;
+    margin: 5px;
+}
+#guess img{
+    border: 1px solid black;
 }

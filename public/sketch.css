@@ -1,3 +1,7 @@
+* {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
 .container{
     margin: auto;
     text-align: center;
@@ -16,7 +20,8 @@
 }
 #canvas {
     border: 2px solid black;
-
+    width: 900px;
+    height: 600px;
 }
 
 #tools {
@@ -36,11 +41,21 @@
 }
 
 #submit2 { 
-    margin-top: 1%;
+    margin-top: 7%;
     grid-column: 2 / 3;
 }
 .submit {
-    width: 90px;
+    width: 200px;
     height: 40px;
     font-size: 18px;
+}
+
+#desc {
+    grid-column: 2 / 3;
+}
+
+.names {
+    font-size: 28px;
+    grid-column: 2 / 3;
+    user-select: text;
 }
