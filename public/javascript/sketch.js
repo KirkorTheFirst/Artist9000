@@ -8,7 +8,7 @@ let b = 0;
 let c;
 
 function setup() {
-    c = createCanvas(900, 600)
+    c = createCanvas(windowWidth * 0.7, windowHeight * 0.7 )
     background(255, 255, 255);
     c.parent('canvas')
     equipPencil();

@@ -20,15 +20,14 @@
 }
 #canvas {
     border: 2px solid black;
-    width: 900px;
-    height: 600px;
+
 }
 
 #tools {
     border: 2px solid black;
     border-top: 0px solid white;
     padding: 8px 0px 8px 0px;
-    width: 900px;
+
 }
 
 #tools button {
@@ -41,7 +40,7 @@
 }
 
 #submit2 { 
-    margin-top: 7%;
+    margin-top: 1%;
     grid-column: 2 / 3;
 }
 .submit {
