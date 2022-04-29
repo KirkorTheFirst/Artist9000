@@ -114,5 +114,3 @@
         console.log(this.#arr)
     }
 }
-
-module.exports = Heap

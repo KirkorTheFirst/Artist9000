@@ -1,13 +1,14 @@
 //p5js functions:
 
 //false = pen equipped, true = eraser equipped
+
 let eraser = false;
 let r = 0;
 let g = 0;
 let b = 0;
 
 function setup() {
-    let c = createCanvas(900, 600)
+    let c = createCanvas(windowWidth * 0.7, windowHeight * 0.7)
     c.parent('canvas')
     equipPencil();
 }

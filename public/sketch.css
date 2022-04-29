@@ -16,8 +16,7 @@
 }
 #canvas {
     border: 2px solid black;
-    width: 900px;
-    height: 600px;
+
 }
 
 #tools {
@@ -37,7 +36,7 @@
 }
 
 #submit2 { 
-    margin-top: 7%;
+    margin-top: 1%;
     grid-column: 2 / 3;
 }
 .submit {
