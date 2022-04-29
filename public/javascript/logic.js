@@ -4,4 +4,3 @@
 
 //when the code is run givenPrompt should not be null... check if it is and say "oops we couldnt do it boohoo"
 let givenPrompt = null;
-
