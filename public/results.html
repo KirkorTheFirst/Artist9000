@@ -10,14 +10,18 @@
     <div class="container">
         <div class="title">Final Guess</div>
         <div id="guess">
-            <img>
+            <img width="450" height="300" id="drawing">
         </div>
-
-
         <table id="closest">
             <tr>
                 <th><span id="final">idk man</span></th>
             </tr>
+            <tr>
+                <td id="filler"></td>
+            </tr>
+        </table>
+        <div class="title">Other Close Guesses</div>
+        <table id="closest">
             <tr>
                 <td id="2">2nd closest result</td>
             </tr>
@@ -53,6 +57,11 @@
     </div>
 
     <script>
+
+        if (sessionStorage.getItem("canvasURL") == null) window.location.href = 'index.html';
+
+        document.getElementById("drawing").setAttribute("src", sessionStorage.getItem("canvasURL"))
+
 
         let givenPrompt2 = sessionStorage.getItem("prompt");
 
