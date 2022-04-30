@@ -7,17 +7,23 @@ let g = 0;
 let b = 0;
 let c;
 
+let back = [255, 255 ,255];
+
 function setup() {
     c = createCanvas(windowWidth * 0.7, windowHeight * 0.7 )
-    background(255, 255, 255);
+    background(back[0], back[1], back[2]);
     c.parent('canvas')
     equipPencil();
+
+    oldMouseX = mouseX;
+    oldMousY = mouseY;
 }
 function draw() {
     if(mouseIsPressed) {
 
         if (eraser){
-            stroke(255, 255, 255);
+            stroke(back[0], back[1], back[2]);
+            
         } else{
             stroke(r, g, b);
         }
