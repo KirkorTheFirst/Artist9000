@@ -30,13 +30,19 @@
 
 }
 
-#tools button {
-    height: 27px;
-}
-
-#tools * {
+#tools button, input{
     border: 1px solid black;
     border-radius: 2px;
+    padding: 3px 3px 3px 3px;
+    height: 56px;
+    width: 56px;
+    vertical-align: middle;
+}
+
+#tools * img {
+    height: 48px;
+    width: 48px;
+    border: none;
 }
 
 #submit2 { 
