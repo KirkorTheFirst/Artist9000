@@ -19,6 +19,7 @@ td#filler{
 
 #final {
     font-size: 34px;
+
 }
 
 #guess {
@@ -27,4 +28,6 @@ td#filler{
 }
 #guess img{
     border: 1px solid black;
+    width: 30vw;
+    height: 30vh;
 }
