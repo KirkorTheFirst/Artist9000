@@ -2,22 +2,25 @@
     font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
-#closest { 
+#closest {
     grid-column: 2 / 3;
     text-align: center;
 }
 
 td, th {
+    background-color:white;
     border: 1px solid black;
     width: 40vw;
     height: 10vh;
     font-size: 22px;
 }
 td#filler{
+    background-color:#EED210;
     border: none;
 }
 
 #final {
+    background-color:white;
     font-size: 34px;
 
 }

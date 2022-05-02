@@ -23,7 +23,7 @@ function draw() {
 
         if (eraser){
             stroke(back[0], back[1], back[2]);
-            
+
         } else{
             stroke(r, g, b);
         }
@@ -35,6 +35,7 @@ function draw() {
 
 function clearScreen(){
     clear();
+    background(back[0], back[1], back[2]);
 }
 
 function changeColor(newr, newg, newb){
@@ -60,3 +61,4 @@ function equipPencil(){
 function saveDrawing(prompt){
     saveCanvas(c, prompt, "png")
 }
+
