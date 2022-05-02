@@ -24,13 +24,14 @@
     
 }
 #canvas {
+    margin-top: 2px;
     background-color:white;
     border: 2px solid black;
 
 }
 
 #tools {
-    background-color:white;
+    background-color:lightgrey;
     border: 2px solid black;
     border-top: 0px solid white;
     padding: 8px 0px 8px 0px;
@@ -87,4 +88,8 @@
     font-size: 28px;
     grid-column: 2 / 3;
     user-select: text;
+}
+
+#mainMenu{
+    margin-top: 20%;
 }

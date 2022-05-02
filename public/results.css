@@ -8,8 +8,8 @@
 }
 
 td, th {
-    background-color:white;
-    border: 1px solid black;
+    background-color:lightgrey;
+    border: 2px solid black;
     width: 40vw;
     height: 10vh;
     font-size: 22px;
@@ -20,7 +20,7 @@ td#filler{
 }
 
 #final {
-    background-color:white;
+    background-color: inherit;
     font-size: 34px;
 
 }
@@ -30,7 +30,7 @@ td#filler{
     margin: 5px;
 }
 #guess img{
-    border: 1px solid black;
+    border: 2px solid black;
     width: 30vw;
     height: 30vh;
 }
