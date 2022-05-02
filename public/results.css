@@ -9,8 +9,8 @@
 
 td, th {
     border: 1px solid black;
-    width: 200px;
-    height: 80px;
+    width: 40vw;
+    height: 10vh;
     font-size: 22px;
 }
 td#filler{
