@@ -2,22 +2,25 @@
     font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
-#closest { 
+#closest {
     grid-column: 2 / 3;
     text-align: center;
 }
 
 td, th {
-    border: 1px solid black;
-    width: 200px;
-    height: 80px;
+    background-color:lightgrey;
+    border: 2px solid black;
+    width: 40vw;
+    height: 10vh;
     font-size: 22px;
 }
 td#filler{
+    background-color:#FFD139;
     border: none;
 }
 
 #final {
+    background-color: inherit;
     font-size: 34px;
 
 }
@@ -27,7 +30,7 @@ td#filler{
     margin: 5px;
 }
 #guess img{
-    border: 1px solid black;
+    border: 2px solid black;
     width: 30vw;
     height: 30vh;
 }

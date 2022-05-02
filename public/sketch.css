@@ -1,8 +1,12 @@
 * {
     font-family:Verdana, Geneva, Tahoma, sans-serif;
+    background-color:#FFD139;
 }
 
+
+
 .container{
+
     margin: auto;
     text-align: center;
     display: grid;
@@ -14,39 +18,65 @@
     grid-column: 2 / 3;
     user-select: text;
 }
+
 #game{
     grid-column: 2 / 3;
     
 }
 #canvas {
+    margin-top: 2px;
+    background-color:white;
     border: 2px solid black;
 
 }
 
 #tools {
+    background-color:lightgrey;
     border: 2px solid black;
     border-top: 0px solid white;
     padding: 8px 0px 8px 0px;
 
 }
 
-#tools button {
-    height: 27px;
-}
-
-#tools * {
-    border: 1px solid black;
+#tools button, input{
+    background-color:lightgrey;
+    border: 2px solid black;
     border-radius: 2px;
+    padding: 3px 3px 3px 3px;
+    height: 56px;
+    width: 56px;
+    vertical-align: middle;
+}
+#tools button:hover{
+    background-color:grey;
+}
+#tools input:hover{
+    background-color:grey;
 }
 
-#submit2 { 
+#tools * img {
+    background-color:lightgrey;
+    height: 48px;
+    width: 48px;
+    border: none;
+}
+#tools * img:hover{
+    background-color:grey;
+}
+
+#submit2 {
     margin-top: 1%;
     grid-column: 2 / 3;
 }
 .submit {
+    background-color:lightgray;
+    border: 2px solid black;
     width: 200px;
     height: 40px;
     font-size: 18px;
+}
+.submit:hover{
+    background-color:grey;
 }
 
 #desc {
@@ -54,7 +84,12 @@
 }
 
 .names {
+
     font-size: 28px;
     grid-column: 2 / 3;
     user-select: text;
+}
+
+#mainMenu{
+    margin-top: 20%;
 }
