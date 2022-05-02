@@ -1,5 +1,6 @@
 /**
  * a generic Heap
+ * @author Finn Taylor
  */
  class Heap {
     #arr = []

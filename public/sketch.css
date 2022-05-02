@@ -2,11 +2,10 @@
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     background-color:#FFD139;
 }
-
-
-
+.selected {
+    background-color: gray;
+}
 .container{
-
     margin: auto;
     text-align: center;
     display: grid;
@@ -47,6 +46,9 @@
     width: 56px;
     vertical-align: middle;
 }
+.submit:hover{
+    background-color:grey;
+}
 #tools button:hover{
     background-color:grey;
 }
@@ -54,14 +56,14 @@
     background-color:grey;
 }
 
+#tools * img:hover{
+    background-color:grey;
+}
 #tools * img {
     background-color: inherit;
     height: 48px;
     width: 48px;
     border: none;
-}
-#tools * img:hover{
-    background-color:grey;
 }
 
 #submit2 {
@@ -74,9 +76,6 @@
     width: 200px;
     height: 40px;
     font-size: 18px;
-}
-.submit:hover{
-    background-color:grey;
 }
 
 #desc {

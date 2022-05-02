@@ -11,7 +11,7 @@
   </head>
   <body>
     <div class="container">
-      <div class="title">Draw a <span id="prompt">yeet</span>!</div>
+      <div class="title">Draw This: <span id="prompt">yeet</span></div>
       <div id="game">
         <div id="canvas"></div>
         <div id="tools">
@@ -26,25 +26,75 @@
         <button id="submit" class="submit">Computer Guess</button>
       </div>
     </div>
-    
     <script>
+      //we probably want to add an eventlistener to the canvas that sees when the mouse has been pressed, and then we can transfer the drawing into an array. 
+      //I dont ken how to set the drawing to be of a max of 256 pixels. i guess if it is over just subtract or divide or something?
+      //thus, because this will probably be long, maybe move this all to another file?
       let drawing;
 
       let prompts = [
-        'line',
-        'triangle',
-        'zigzag',
+        'axe',
+        'baseball bat',
+        'bed',
+        'bench',
+        'bread',
+        'canoe',
+        'circle',
+        'diamond',
+        'door',
+        'ear',
+        'elbow',
+        'envelope',
+        'fork',
+        'hammer',
+        'hexagon',
+        'hockey stick',
+        'ladder',
         'leg',
+        'line',
+        'lipstick',
+        'mountain',
+        'ocean',
+        'paper clip',
+        'pear',
+        'pencil',
+        'pillow',
+        'popsicle',
+        'rainbow',
+        'screwdriver',
+        'see saw',
+        'shoe',
+        'shorts',
+        'shovel',
+        'spoon',
         'square',
         'stairs',
-        'canoe',
-        'mountain',
-        'pillow',
-        'door',
-        'swing',
-        'spoon',
-        'fork',
+        'star',
+        'stitches',
+        'streetlight',
+        'string bean',
+        'suitcase',
+        'swing set',
+        'sword',
+        't-shirt',
+        'table',
+        'tent',
+        'triangle',
+        'underware',
+        'wine bottle',
+        'zigzag'
       ];
+      let canvas = document.getElementById('canvas')
+      canvas.addEventListener('mousedown', recordMouseClicks)
+      let initMouseX = null
+      let initMouseY = null
+      let canvasBeenClicked = false
+      function recordMouseClicks() {
+        if(!canvasBeenClicked) {
+          
+        }
+      }
+        
 
       givenPrompt = prompts[Math.floor(Math.random() * prompts.length)];
       document.getElementById("prompt").innerHTML = givenPrompt;
