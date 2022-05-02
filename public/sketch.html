@@ -61,6 +61,8 @@
       document.getElementById("submit").onclick = function () {
         let canvas = document.getElementById("defaultCanvas0");
         sessionStorage.setItem("canvasURL", canvas.toDataURL("img/png"));
+
+        
         // RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
         window.location.href = 'results.html';
       }
