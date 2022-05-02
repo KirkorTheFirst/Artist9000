@@ -36,7 +36,12 @@
     padding: 8px 0px 8px 0px;
 
 }
-
+#text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1%;
+}
 #tools button, input{
     background-color:lightgrey;
     border: 2px solid black;
