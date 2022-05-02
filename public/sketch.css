@@ -60,7 +60,7 @@
     background-color:grey;
 }
 #tools * img {
-    background-color:lightgrey;
+    background-color: inherit;
     height: 48px;
     width: 48px;
     border: none;
