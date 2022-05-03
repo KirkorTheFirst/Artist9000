@@ -111,10 +111,13 @@
       document.getElementById("submit").onclick = function () {
         let canvas = document.getElementById("defaultCanvas0");
         sessionStorage.setItem("canvasURL", canvas.toDataURL("img/png"));
-
-        
+        let ctx = canvas.getContext('2d')
+        //this is the array of every pixel (not to be confused with a 2d array)
+        let imgData = ctx.getImageData(0, 0, 900, 600).data;
+        sessionStorage.setItem("pixelData", imgData);
         // RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
-        window.location.href = 'results.html';
+
+        // window.location.href = 'results.html';
       }
     </script>
   </body>
