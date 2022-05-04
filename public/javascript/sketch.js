@@ -1,5 +1,3 @@
-//p5js functions:
-
 //false = pen equipped, true = eraser equipped
 let eraser = false;
 let r = 0;
@@ -61,4 +59,3 @@ function equipPencil(){
 function saveDrawing(prompt){
     saveCanvas(c, prompt, "png")
 }
-

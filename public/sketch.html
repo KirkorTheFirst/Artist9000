@@ -1,13 +1,8 @@
 <html lang="en-US">
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
-    <script src="javascript/sketch.js"></script>
-    <script src="javascript/heap.js"></script>
-    <script src="javascript/logic.js"></script>
-    
-
     <link rel="stylesheet" href="sketch.css">
+    <title>Artist 9000</title>
   </head>
   <body>
     <div class="container">
@@ -28,9 +23,6 @@
     </div>
     <div id="text">Note: If you resize the page, you must reload the page for the canvas to be resized</div>
     <script>
-      //we probably want to add an event listener to the canvas that sees when the mouse has been pressed, and then we can transfer the drawing into an array.
-      //I dont ken how to set the drawing to be of a max of 256 pixels. i guess if it is over just subtract or divide or something?
-      //thus, because this will probably be long, maybe move this all to another file?
       let drawing;
       let prompts = [
         'axe',
@@ -110,12 +102,14 @@
 
       document.getElementById("submit").onclick = function () {
         let canvas = document.getElementById("defaultCanvas0");
+        let ctx = canvas.getContext('2d')
         sessionStorage.setItem("canvasURL", canvas.toDataURL("img/png"));
-
-        
         // RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
         window.location.href = 'results.html';
       }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
+    <script src="javascript/sketch.js"></script>
+    <script src="javascript/logic.js"></script>
   </body>
 </html>
