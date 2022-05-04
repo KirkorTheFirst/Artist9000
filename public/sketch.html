@@ -26,7 +26,7 @@
         <button id="submit" class="submit">Computer Guess</button>
       </div>
     </div>
-    <div id="text">Note: If you resize the page, you must reload the page for the canvas to be resized</div>
+    <div id="note">Note: If you resize the page, you must reload the page for the canvas to be resized</div>
     <script>
       //we probably want to add an event listener to the canvas that sees when the mouse has been pressed, and then we can transfer the drawing into an array.
       //I dont ken how to set the drawing to be of a max of 256 pixels. i guess if it is over just subtract or divide or something?
@@ -89,17 +89,19 @@
       let initMouseX = null
       let initMouseY = null
       let canvasBeenClicked = false
+
       function recordMouseClicks() {
         if(!canvasBeenClicked) {
           
         }
       }
-        
+      let givenPrompt = sessionStorage.getItem("prompt");
+      if (givenPrompt == null){
+        givenPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+        sessionStorage.setItem("prompt", givenPrompt);
+      }
 
-      givenPrompt = prompts[Math.floor(Math.random() * prompts.length)];
       document.getElementById("prompt").innerHTML = givenPrompt;
-
-      sessionStorage.setItem("prompt", givenPrompt);
 
       document.getElementById("paint").oninput = function () {
         let r = parseInt(this.value.substring(1, 3), 16);
@@ -113,11 +115,14 @@
         sessionStorage.setItem("canvasURL", canvas.toDataURL("img/png"));
         let ctx = canvas.getContext('2d')
         //this is the array of every pixel (not to be confused with a 2d array)
-        let imgData = ctx.getImageData(0, 0, 900, 600).data;
-        sessionStorage.setItem("pixelData", imgData);
+
+        // let imgData = ctx.getImageData(0, 0, 900, 600).data;
+        // sessionStorage.setItem("pixelData", imgData);
+
+
         // RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
 
-        // window.location.href = 'results.html';
+        window.location.href = 'results.html';
       }
     </script>
   </body>

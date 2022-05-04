@@ -67,6 +67,7 @@
         console.log(sessionStorage.getItem("pixelData"));
 
         let givenPrompt2 = sessionStorage.getItem("prompt");
+        sessionStorage.removeItem("prompt");
 
         document.getElementById("final").innerHTML = givenPrompt2;
 
