@@ -84,17 +84,10 @@
         'wine bottle',
         'zigzag'
       ];
-      let canvas = document.getElementById('canvas')
-      canvas.addEventListener('mousedown', recordMouseClicks)
       let initMouseX = null
       let initMouseY = null
       let canvasBeenClicked = false
 
-      function recordMouseClicks() {
-        if(!canvasBeenClicked) {
-          
-        }
-      }
       let givenPrompt = sessionStorage.getItem("prompt");
       if (givenPrompt == null){
         givenPrompt = prompts[Math.floor(Math.random() * prompts.length)];
@@ -117,13 +110,37 @@
         //this is the array of every pixel (not to be confused with a 2d array)
 
         // let imgData = ctx.getImageData(0, 0, 900, 600).data;
-        // sessionStorage.setItem("pixelData", imgData);
+        // sessionStorage.setItem("pixelData", imgData[0]);
 
-
+        // if (sessionStorage.getItem("strokes") != null){
+        //   console.log(sessionStorage.getItem("strokes"));
+        // }
+        logStrokes();
         // RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
 
-        window.location.href = 'results.html';
+        // window.location.href = 'results.html';
       }
+
+      function mousePress (pressing) {
+        if (pressing){
+          startStroke();
+        } else {
+          endStroke();
+        }
+      }
+
+      function mouseDown(){
+        mousePress(true);
+      }
+      function mouseUp(){
+        mousePress(false);
+      }
+      
+      window.addEventListener("mousedown", mouseDown);
+      window.addEventListener("mouseup", mouseUp);
+
+      
+      
     </script>
   </body>
 </html>

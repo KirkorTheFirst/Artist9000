@@ -62,19 +62,17 @@
         if (sessionStorage.getItem("canvasURL") == null) window.location.href = 'index.html';
 
         document.getElementById("drawing").setAttribute("src", sessionStorage.getItem("canvasURL"))
-        
-        //right now its too big of an array to print
-        console.log(sessionStorage.getItem("pixelData"));
 
         let givenPrompt2 = sessionStorage.getItem("prompt");
-        sessionStorage.removeItem("prompt");
 
         document.getElementById("final").innerHTML = givenPrompt2;
 
         document.getElementById("back").onclick = function () {
+            sessionStorage.removeItem("prompt");
             window.location.href = 'sketch.html';
         }
         document.getElementById("back2").onclick = function () {
+            sessionStorage.removeItem("prompt");
             window.location.href = 'index.html';
         }
 

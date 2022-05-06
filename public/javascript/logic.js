@@ -1,5 +1,6 @@
-let ourDrawing = new Image(255, 255);
-ourDrawing.src = sessionStorage.getItem("canvasURL");
+// TODO: uncomment this but it throws an error in sketch.html
+// let ourDrawing = new Image(255, 255);
+// ourDrawing.src = sessionStorage.getItem("canvasURL");
 
 //(this is the big scary algorithm)
 /**
@@ -30,7 +31,6 @@ function getItems(){
  * @param {Image} drawing
  */
 function convertToArray(drawing){
-
     //use ImageData
 }
 
