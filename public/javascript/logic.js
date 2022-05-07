@@ -26,12 +26,36 @@ function getItems(){
     return items;
 }
 
-/**
- * reformats our drawing to specified dimensions
- * @param {Image} drawing
- */
-function convertToArray(drawing){
-    //use ImageData
+function getSlopes(arr){
+    let i = 0;
+    let slopes = new Array();
+    for (let stroke of arr){
+      slopes.push(new Array());
+      let currentSlope = 0;
+      let temp = 0;
+      for (let j = 0; j < stroke[0].length - 1; j++){
+        let x = stroke[0][j];
+        let y = stroke[1][j];
+
+
+        let deltaX = (stroke[0][j + 1] - x);
+        let deltaY = (stroke[1][j + 1] - y);
+        if (deltaX == 0) deltaX = 1;
+        if (deltaY == 0) deltaY = 1; 
+        let tempSlope = deltaY/deltaX;
+
+        if (currentSlope != 0){
+            slopes[i].push(currentSlope);
+            currentSlope = tempSlope;
+        } else currentSlope = tempSlope;
+        temp++;
+      }
+      if (slopes[i][slopes[i].length - 1] != currentSlope){
+        slopes[i].push(currentSlope);
+      }
+      i++;
+    }
+    return slopes;
 }
 
 /**

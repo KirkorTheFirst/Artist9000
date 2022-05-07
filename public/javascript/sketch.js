@@ -18,7 +18,7 @@ let dy = 0;
 let alreadyStopped = false;
 let stroking = false;
 
-const recordTime = 50;
+const recordTime = 100;
 let recordTimer = recordTime;
 
 let strokes = new Array();
@@ -36,48 +36,56 @@ function setup() {
     oldMouseX = mouseX;
     oldMouseY = mouseY;
 }
+
 function draw() {
     let rtn = false;
 
-    dx = abs(mouseX - oldMouseX);
-    dy = abs(mouseY - oldMouseY);
+    dx = mouseX - oldMouseX;
+    dy = mouseY - oldMouseY;
 
-    if(mouseIsPressed && stroking) {
-        //record when the mouse stops completely
-        let threshold = 0;
-        let detectedStop = false;
-        if (dx >= -threshold && dx <= threshold){
-            if (dy >= -threshold && dy <= threshold){
-                detectedStop = true;
-                if (!alreadyStopped){
-                    alreadyStopped = true;
-                    record();
-                }
-            }
-        }
-        if (!detectedStop){
-            alreadyStopped = false;
-        }
+    if(mouseIsPressed) {
 
         //check to see if you draw with color or erase (aka draw with background color)
         if (eraser){
             stroke(back[0], back[1], back[2]);
 
-        } else{
-            stroke(r, g, b);
-        }
-        
-        line(mouseX, mouseY, pmouseX, pmouseY)
-        rtn = true;
+        } else if (stroking) {
 
-        //check to see if you should record a point
-        if (stroking) {
-            recordTimer -= Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-            if (recordTimer <= 0){
+            //record when the mouse stops completely
+            let stopThreshold = 0.1;
+            let detectedStop = false;
+            if (dx >= -stopThreshold && dx <= stopThreshold) {
+                if (dy >= -stopThreshold && dy <= stopThreshold) {
+                    detectedStop = true;
+                    if (!alreadyStopped) {
+                        alreadyStopped = true;
+                        recordTimer = recordTime;
+                        record();
+                    }
+                }
+            }
+            if (!detectedStop) {
+                if (dx < -stopThreshold && dx > stopThreshold) {
+                    if (dy < -stopThreshold && dy > stopThreshold) {
+                        if (recordTimer < 30) alreadyStopped = false;
+                    }
+                }
+                if (recordTimer < 10) alreadyStopped = false;
+            }
+
+            //check to see if you should record a point
+            //TODO: find a reliable way thats not time based!
+            recordTimer -= (abs(dx) + abs(dy));
+            if (recordTimer <= 0) {
                 recordTimer = recordTime;
                 record();
             }
+
+            stroke(r, g, b);
         }
+
+        line(mouseX, mouseY, pmouseX, pmouseY)
+        rtn = true;
     }
 
     oldMouseX = mouseX;
@@ -88,7 +96,12 @@ function draw() {
 function clearScreen(){
     clear();
     background(back[0], back[1], back[2]);
-    //TODO: empty array here
+    numPoints = 0;
+    numberStrokes = 0;
+    strokes = [];
+    recordTimer = recordTime;
+    dx = 0;
+    dy = 0;
 }
 
 function changeColor(newr, newg, newb){
@@ -116,17 +129,19 @@ function saveDrawing(prompt){
 }
 
 function startStroke(){
-    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height){
+    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height && !eraser){
+        strokeWeight(7);
         strokes.push(new Array());
         strokes[numberStrokes][0] = new Array();
         strokes[numberStrokes][1] = new Array();
+        record();
         stroking = true;
-        recordTimer = recordTime;
+        recordTimer = 0;
     }
 }
 
 function endStroke(){
-    if (stroking){
+    if (stroking && !eraser){
         record();
         numberStrokes++;
         numPoints = 0;
@@ -136,18 +151,40 @@ function endStroke(){
 }
 
 function record(){
-        strokes[numberStrokes][0][numPoints] = Math.floor(mouseX);
-        strokes[numberStrokes][1][numPoints] = Math.floor(mouseY);
+        strokes[numberStrokes][0][numPoints] = mouseX;
+        strokes[numberStrokes][1][numPoints] = mouseY;
         numPoints++;
 
+        lastRecordedPoint = [mouseX, mouseY];
         stroke(255, 0, 0);
         ellipse(mouseX, mouseY, 5, 5);
 }
 
 function logStrokes(){
+    console.log("strokes")
     console.log(strokes);
 }
 
 function getStrokes(){
     return strokes;
+}
+
+function drawAvg(strokes){
+    for (let stroke2 of strokes){
+        let prevX;
+        let prevY;
+        stroke(255, 0, 0);
+        for (let i = 0; i < stroke2[0].length; i++){
+            let x = stroke2[0][i];
+            let y = stroke2[1][i];
+            if (i == 0){
+                prevX = x;
+                prevY = y;
+            } else {
+                line(prevX, prevY, x, y);
+                prevX = x;
+                prevY = y;
+            }
+        }
+    }
 }

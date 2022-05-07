@@ -106,16 +106,20 @@
       document.getElementById("submit").onclick = function () {
         let canvas = document.getElementById("defaultCanvas0");
         sessionStorage.setItem("canvasURL", canvas.toDataURL("img/png"));
-        let ctx = canvas.getContext('2d')
-        //this is the array of every pixel (not to be confused with a 2d array)
 
-        // let imgData = ctx.getImageData(0, 0, 900, 600).data;
-        // sessionStorage.setItem("pixelData", imgData[0]);
-
-        // if (sessionStorage.getItem("strokes") != null){
-        //   console.log(sessionStorage.getItem("strokes"));
-        // }
         logStrokes();
+
+        let strokes2 = getStrokes();
+        let slopes = getSlopes(strokes2);
+
+        console.log("slopes")
+        console.log(slopes);
+        
+        let dataSetDrawing = [[[78,76,77,108,133,143,130,60,37,0,43,80,113,160,166,160,83,45,41,42,60,76,87],[9,14,21,111,211,242,230,188,177,166,150,127,99,50,46,57,175,255,248,222,157,28,0]]]
+        drawAvg(dataSetDrawing);
+
+        drawAvg(strokes2);
+
         // RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
 
         // window.location.href = 'results.html';
