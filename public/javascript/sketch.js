@@ -27,7 +27,7 @@ let alreadyStopped = false;
 let stroking = false;
 
 //timer for when to record new points on the line
-const recordTime = 80;
+const recordTime = 50;
 let recordTimer = recordTime;
 
 /**
@@ -76,8 +76,8 @@ function draw() {
     //draws a box in the top-right to view drawings in the dataset drawn with drawAvg()
     stroke(255, 0, 0);
     strokeWeight(1);
-    line(0, 256, 256, 256);
-    line(256, 0, 256, 256);
+    line(0, 255, 255, 255);
+    line(255, 0, 255, 255);
     strokeWeight(7);
 
     let rtn = false;

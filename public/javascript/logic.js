@@ -74,3 +74,56 @@ function toHeap(map){
     
     return heap;
 }
+
+function getBoundingBox(drawing){
+  //gets the min and max x and y values for all the points in your drawing
+  let xmin = null;
+  let xmax = null;
+  let ymin = null;
+  let ymax = null;
+  for (let stroke2 of drawing){
+    for (let i = 0; i < stroke2[0].length; i++){
+      let x = stroke2[0][i]
+      let y = stroke2[1][i]
+
+      let set = false;
+
+      if (xmin == null) { xmin = x; set = true; }
+      if (xmax == null) { xmax = x; set = true; }
+      if (ymin == null) { ymin = y; set = true; }
+      if (ymax == null) { ymax = y; set = true; }
+
+      if (!set){
+        if (xmin > x) xmin = x; set = true;
+        if (xmax < x) xmax = x; set = true;
+        if (ymin > y) ymin = y; set = true;
+        if (ymax < y) ymax = y; set = true;
+      }
+
+    }
+  }
+  //to make the box a perfect square, pick the dimensions based on which direction is traveled further (more x change or y change?)
+  if (xmax - xmin > ymax - ymin){
+    // //center the box so that the drawing is in the middle
+    // for (let i = 0; i < (xmax - xmin)/ 2; i++){
+    //   ymax++;
+    //   ymin--;
+    //   if (xmax - xmin <= ymax - ymin) break;
+    // }
+    ymax = ymin + (xmax - xmin)
+  }
+  else if (xmax - xmin <= ymax - ymin){
+    // //center the box so that the drawing is in the middle
+    // for (let i = 0; i < (ymax - ymin)/ 2; i++){
+    //   xmax++;
+    //   xmin--;
+    //   if (xmax - xmin >= ymax - ymin) break;
+    // }
+    xmax = xmin + (ymax - ymin)
+  }
+  //draw the perfect square box
+  drawBox(xmin, xmax, ymin, ymax)
+
+  //return the bounds
+  return [xmin, ymin, xmax, ymax]
+}
