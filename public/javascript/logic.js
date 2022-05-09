@@ -1,17 +1,13 @@
-// TODO: uncomment this but it throws an error in sketch.html
-// let ourDrawing = new Image(255, 255);
-// ourDrawing.src = sessionStorage.getItem("canvasURL");
-
 //(this is the big scary algorithm)
 /**
+ * @param {Array} drawing 3d array of our drawing
  * @returns heap of similar items sorted by similarity (%)
  */
-function compare(){
-    //reformat our drawing
-    convertToArray(ourDrawing)
+function compare(drawing){
+
     let items = getItems();
     //then find the ones that are similar and how similar (%)
-    let similarityMap = getSimilarity(items, ourDrawing);
+    let similarityMap = getSimilarity(items, drawing);
     //sort in heap
     return toHeap(similarityMap);
     
@@ -61,7 +57,7 @@ function getSlopes(arr){
 /**
  * compares our drawing to each items and ranks similarity
  * @param {MediaPositionState} items map of all item categories and an array of images
- * @param {Image} drawing the user-created drawing (28x28)
+ * @param {Array} drawing the user-created drawing 3d array
  * @returns map of all items and their similarity to our drawing
  */
 function getSimilarity(items, drawing){
