@@ -2,7 +2,7 @@ completeDataset = completeDataset.split('ß')
 completeDataset.pop()
 let jsonItems = {}
 for(let i = 0; i < completeDataset.length; i++) {
-    console.log(JSON.parse(completeDataset[i]))
+    // console.log(JSON.parse(completeDataset[i]))
 }   
 let heap = new Heap(function(a, b) {
     if(a < b) {

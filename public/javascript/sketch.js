@@ -187,7 +187,6 @@ function equipPencil(){
 function saveDrawing(prompt){
     //download the current canvas state and name it the prompt given to the user
     saveCanvas(c, prompt, "png")
-<<<<<<< HEAD
 }
 
 function startStroke(){
@@ -272,6 +271,4 @@ function drawBox(xmin, xmax, ymin, ymax){
     line(xmax, ymin, xmax, ymax)
     stroke(0, 0, 0);
     strokeWeight(7);
-=======
->>>>>>> algorithm
 }
