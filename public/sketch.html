@@ -1,13 +1,8 @@
 <html lang="en-US">
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
-    <script src="javascript/sketch.js"></script>
-    <script src="javascript/heap.js"></script>
-    <script src="javascript/logic.js"></script>
-    
-
     <link rel="stylesheet" href="sketch.css">
+    <title>Artist 9000</title>
   </head>
   <body>
     <div class="container">
@@ -28,7 +23,7 @@
     </div>
     <div id="note">Note: If you resize the page, you must reload the page for the canvas to be resized</div>
     <script>
-      //list of every prompt to choose from
+      let drawing;
       let prompts = [
         'axe',
         'baseball bat',
@@ -103,6 +98,7 @@
       document.getElementById("submit").onclick = function () {
         //first add the URL to the canvas as a png to the session storage, so that it can be in the html on results page
         let canvas = document.getElementById("defaultCanvas0");
+        let ctx = canvas.getContext('2d')
         sessionStorage.setItem("canvasURL", canvas.toDataURL("img/png"));
 
         let strokes2 = getStrokes();
@@ -185,5 +181,10 @@
       
       
     </script>
+    <script src="javascript/jsonitems.js"></script>
+    <script src="javascript/heap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
+    <script src="javascript/sketch.js"></script>
+    <script src="javascript/logic.js"></script>
   </body>
 </html>

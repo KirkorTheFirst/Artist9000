@@ -1,4 +1,18 @@
-//(this is the big scary algorithm)
+completeDataset = completeDataset.split('ß')
+completeDataset.pop()
+let jsonItems = {}
+for(let i = 0; i < completeDataset.length; i++) {
+    console.log(JSON.parse(completeDataset[i]))
+}   
+let heap = new Heap(function(a, b) {
+    if(a < b) {
+        return -1
+    } else if (a === b) {
+        return 0
+    } else {
+        return 1
+    }
+})
 /**
  * @param {Array} drawing 3d array of our drawing
  * @returns heap of similar items sorted by similarity (%)
@@ -70,8 +84,7 @@ function getSimilarity(items, drawing){
  * @returns sorted heap of items based on similarity
  */
 function toHeap(map){
-    let heap = new Heap();
-    
+
     return heap;
 }
 
