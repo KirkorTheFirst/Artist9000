@@ -31,6 +31,10 @@ td#filler{
 }
 #guess img{
     border: 2px solid black;
-    width: 30vw;
-    height: 30vh;
+    width: 90%;
+    height: 90%;
+}
+
+span {
+    background-color: lightgrey;
 }

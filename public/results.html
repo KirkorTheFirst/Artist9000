@@ -9,7 +9,7 @@
     <div class="container">
         <div class="title">Final Guess</div>
         <div id="guess">
-            <img id="drawing" width="28" height="28">
+            <img id="drawing">
         </div>
         <table id="closest">
             <tr>
@@ -22,31 +22,31 @@
         <div class="title">Other Close Guesses</div>
         <table id="closest">
             <tr>
-                <td id="2">2nd closest result</td>
+                <td><span id="2">2nd closest result</span></td>
             </tr>
             <tr>
-                <td id="3">3rd closest result</td>
+                <td><span id="3">2nd closest result</span></td>
             </tr>
             <tr>
-                <td id="4">4th closest result</td>
+                <td><span id="4">2nd closest result</span></td>
             </tr>
             <tr>
-                <td id="5">5th closest result</td>
+                <td><span id="5">2nd closest result</span></td>
             </tr>
             <tr>
-                <td id="6">6th closest result</td>
+                <td><span id="6">2nd closest result</span></td>
             </tr>
             <tr>
-                <td id="7">7th closest result</td>
+                <td><span id="7">2nd closest result</span></td>
             </tr>
             <tr>
-                <td id="8">8th closest result</td>
+                <td><span id="8">2nd closest result</span></td>
             </tr>
             <tr>
-                <td id="9">9th closest result</td>
+                <td><span id="9">2nd closest result</span></td>
             </tr>
             <tr>
-                <td id="10">10th closest result</td>
+                <td><span id="10">2nd closest result</span></td>
             </tr>
         </table>
 
@@ -64,8 +64,6 @@
 
         let givenPrompt2 = sessionStorage.getItem("prompt");
 
-        document.getElementById("final").innerHTML = givenPrompt2;
-
         document.getElementById("back").onclick = function () {
             sessionStorage.removeItem("prompt");
             window.location.href = 'sketch.html';
@@ -73,6 +71,29 @@
         document.getElementById("back2").onclick = function () {
             sessionStorage.removeItem("prompt");
             window.location.href = 'index.html';
+        }
+
+        //first set the final one
+        let finalPrompt = sessionStorage.getItem("prompt1");
+        let finalSimilarity = sessionStorage.getItem("similarity1");
+        document.getElementById("final").innerHTML = finalPrompt + " [" + addZeros(finalSimilarity) + "%]";
+
+        //now do the rest
+        for (let i = 2; i <= 10; i++){
+            let prompt = sessionStorage.getItem("prompt" + i.toString());
+            let similarity = sessionStorage.getItem("similarity" + i.toString());
+            document.getElementById(i.toString()).innerHTML = prompt + " [" + addZeros(similarity) + "%]";
+        }
+
+        function addZeros(number){
+            let string = String(number).padEnd(5, '0');
+            //if there was no decimal originally, add one in
+
+            //first temporarily concatenate a symbol
+            string += "%";
+            string = string.replace("00%", ".00%");
+            //removes symbol
+            return string.replace("%", "");
         }
 
     </script>
