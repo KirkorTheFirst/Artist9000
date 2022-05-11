@@ -54,35 +54,46 @@ let prompts = [
   'zigzag'
 ];
 let heap = new Heap(function(a, b) {
-    if(a < b) {
+    if(a[1] < b[1]) {
         return -1
-    } else if (a === b) {
+    } else if (a[1] === b[1]) {
         return 0
     } else {
         return 1
     }
 })
+const datasetBoxWidth = 512;
+
 /**
  * @param {Array} drawing 3d array of our drawing
- * @returns heap of similar items sorted by similarity (%)
+ * @returns 2D array of top 10 guesses and its similarity (in order)
  */
-function compare(drawing){
+function compare(drawing, ctx){
 
-    // let items = getItems();
-    // //then find the ones that are similar and how similar (%)
-    // let similarityMap = getSimilarity(items, drawing);
-    // //sort in heap
-    return heap;
-    
+    let map = getSimilarity(drawing, ctx);
+    heap = toHeap(map);
+    return getTopTen(heap);
 }
 
 /**
- * gets all the items from the database and puts them in a map with each key pointing to an array of the images
- * @returns map of all item categories and an array of images that were recognized as true
+ * gets the top 10 guesses and returns them in a 2d array format
+ * [
+ *   [prompt guess #1, similarity %],
+ *   [prompt guess #2, similarity %],
+ *   ...
+ * ]
+ * @param {Heap} tempHeap 
+ * @returns 2D array of top 10 guesses
  */
-function getItems(){
-    let items = new Map();
-    return items;
+function getTopTen(tempHeap){
+  let rtn = new Array();
+  for (let i = 1; i <= 10; i++){
+    let arr = tempHeap.pop();
+    //re-convert to positive values
+    arr[1] *= -1;
+    rtn.push([arr[0], arr[1]]);
+  }
+  return rtn;
 }
 
 /**
@@ -122,17 +133,13 @@ function getSimilarity(drawing, ctx){
         let tempSimilarity = totalPX;
         //first get the image data
         let datasetImgData = getDrawingData(json.drawing, ctx)
-        
 
         //loop through every pixel
         for (let i = 0; i < datasetImgData.length; i++) {
-          //make all values either 255 (white) or 0 (black) to make it easier to compare
-          if (userImgData[i] != 255) userImgData[i] = 0;
-          if (datasetImgData[i] != 255) datasetImgData[i] = 0;
 
           if (datasetImgData[i] != userImgData[i]) {
             //if the user's drawing is under-detailed thats especially bad (overdetailed is ok)
-            if (userImgData[i] == 255 && datasetImgData[i] == 0) tempSimilarity--;
+            if (!datasetImgData[i]) tempSimilarity--;
             tempSimilarity--;
           }
         }
@@ -146,7 +153,10 @@ function getSimilarity(drawing, ctx){
         }
       }
     }
-    
+
+    const booster = 16; //boost the algorithm's confidence in the correct prompt by +x%
+    let chosenPrompt = sessionStorage.getItem("prompt")
+
     //finally convert them all to percentages rounded to 2 decimal points so that they can be compared to each other
     for (let key of prompts){
       let finalSimilarity = getPercentage(similarityMap.get(key), totalPX);
@@ -154,8 +164,7 @@ function getSimilarity(drawing, ctx){
       similarityMap.set(key, finalSimilarity);
 
       //give the algorithm a lil nudge in the right direction cough cough nudge nudge
-      const booster = 16; //boost the algorithm's confidence in the correct prompt by +x%
-      let chosenPrompt = sessionStorage.getItem("prompt")
+      
       if (chosenPrompt == key){
         let alteredSimilarity = similarityMap.get(chosenPrompt) + booster;
         similarityMap.delete(chosenPrompt);
@@ -173,7 +182,12 @@ function getSimilarity(drawing, ctx){
  * @returns sorted heap of items based on similarity
  */
 function toHeap(map){
-
+    //remember the heap is a MIN-HEAP so make all similarities negative
+    for (let prompt of prompts){
+      //the data is prompt, negative similarity
+      let data = [prompt, (map.get(prompt)) * -1];
+      heap.push(data);
+    }
     return heap;
 }
 
@@ -241,22 +255,38 @@ function getBoundingBox(drawing){
  * gets the image data for a 256x256 image
  * @param {Array} drawing 3D array of drawing translated to a 256x256 space
  * @param {CanvasRenderingContext2D} ctx 2D context of canvas
- * @returns array of image data
+ * @returns boolean array of image data (true = background, false = not background)
  */
 function getDrawingData(drawing, ctx){
   //first clear the top-left 255x255 space of anything (make it all white for now)
-  let clearData = ctx.getImageData(0, 0, 511, 511);
-  clearData.data.fill(255, 0, (511*511))
+  let clearData = ctx.getImageData(0, 0, datasetBoxWidth, datasetBoxWidth);
+  //the data comes in the format RGBA, so every 4 entries represents 1 px
+  for (let i = 0; i < clearData.data.length; i += 4){
+    //rgb of background
+    clearData[i] = back[0];
+    clearData[i + 1] = back[1];
+    clearData[i + 2] = back[2];
+    //A (alpha) = 255 means fully opaque (fully visible)
+    clearData[i + 3] = 255;
+  }
   ctx.putImageData(clearData, 0, 0);
 
   //draw the drawing in and get the image data for that space
   drawAvg(drawing);
-  let rtn = ctx.getImageData(0, 0, 511, 511).data;
+  let rtn = ctx.getImageData(0, 0, datasetBoxWidth, datasetBoxWidth).data;
+  let rtn2 = new Array();
+  //convert to boolean array
+  for (let i = 0; i < rtn.length; i += 4){
+    if (rtn[i] == back[0] && rtn[i + 1] == back[1] && rtn[i + 2] == back[2]){
+      rtn2.push(true);
+    } else {
+      rtn2.push(false);
+    }
+  }
 
-  //clear space again
   ctx.putImageData(clearData, 0, 0);
 
   //return array
-  return rtn;
+  return rtn2;
 
 }
