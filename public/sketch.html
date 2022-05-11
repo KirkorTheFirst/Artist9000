@@ -66,12 +66,6 @@
 
         let strokes2 = getStrokes();
 
-        let bounds = getBoundingBox(strokes2);
-        let xmin = bounds[0];
-        let xmax = bounds[2];
-        let ymin = bounds[1];
-        let ymax = bounds[3];
-
         //round up/down each coordinate to make it easier to compare to the dataset (whole integers)
         for (let stroke2 of strokes2){
           for (let i = 0; i < stroke2[0].length; i++){
@@ -79,6 +73,12 @@
             stroke2[1][i] = Math.floor(stroke2[1][i]);
           }
         }
+        
+        let bounds = getBoundingBox(strokes2);
+        let xmin = bounds[0];
+        let xmax = bounds[2];
+        let ymin = bounds[1];
+        let ymax = bounds[3];
 
         //scaled down to a 255x255 box
         let strokes3 = getStrokes();
@@ -93,10 +93,8 @@
    
         getSimilarity(strokes3, ctx)
 
-        drawAvg(strokes3);
-
         // RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
-        let heap = compare(strokes3);
+        // let heap = compare(strokes3);
 
         //temporarily commented out for testing
         // window.location.href = 'results.html';

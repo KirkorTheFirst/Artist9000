@@ -85,38 +85,6 @@ function getItems(){
     return items;
 }
 
-function getSlopes(arr){
-    let i = 0;
-    let slopes = new Array();
-    for (let stroke of arr){
-      slopes.push(new Array());
-      let currentSlope = 0;
-      let temp = 0;
-      for (let j = 0; j < stroke[0].length - 1; j++){
-        let x = stroke[0][j];
-        let y = stroke[1][j];
-
-
-        let deltaX = (stroke[0][j + 1] - x);
-        let deltaY = (stroke[1][j + 1] - y);
-        if (deltaX == 0) deltaX = 1;
-        if (deltaY == 0) deltaY = 1; 
-        let tempSlope = deltaY/deltaX;
-
-        if (currentSlope != 0){
-            slopes[i].push(currentSlope);
-            currentSlope = tempSlope;
-        } else currentSlope = tempSlope;
-        temp++;
-      }
-      if (slopes[i][slopes[i].length - 1] != currentSlope){
-        slopes[i].push(currentSlope);
-      }
-      i++;
-    }
-    return slopes;
-}
-
 /**
  * gets the percentage rounded to 2 decimal places
  * @param {Number} val value to find percentage of
@@ -131,7 +99,7 @@ function getSlopes(arr){
 /**
  * compares our drawing to each items and ranks similarity
  * @param {Array} drawing the user-created drawing 3d array
- * @param {*} ctx 2D context of canvas
+ * @param {CanvasRenderingContext2D} ctx 2D context of canvas
  * @returns map of all items and their similarity to our drawing
  */
 function getSimilarity(drawing, ctx){
@@ -184,15 +152,18 @@ function getSimilarity(drawing, ctx){
       let finalSimilarity = getPercentage(similarityMap.get(key), totalPX);
       similarityMap.delete(key);
       similarityMap.set(key, finalSimilarity);
-      console.log(key + " : " + finalSimilarity);
-    }
 
-    //give the algorithm a lil nudge in the right direction cough cough nudge nudge
-    const booster = 10; //boost the algorithm's confidence in the correct prompt by +10%
-    let chosenPrompt = sessionStorage.getItem("prompt")
-    let alteredSimilarity = similarityMap.get(chosenPrompt) + booster;
-    similarityMap.delete(chosenPrompt);
-    similarityMap.set(chosenPrompt, alteredSimilarity);
+      //give the algorithm a lil nudge in the right direction cough cough nudge nudge
+      const booster = 16; //boost the algorithm's confidence in the correct prompt by +x%
+      let chosenPrompt = sessionStorage.getItem("prompt")
+      if (chosenPrompt == key){
+        let alteredSimilarity = similarityMap.get(chosenPrompt) + booster;
+        similarityMap.delete(chosenPrompt);
+        similarityMap.set(chosenPrompt, alteredSimilarity);
+      }
+
+      console.log(key + " : " + finalSimilarity + "%");
+    }
 
     return similarityMap;
 }

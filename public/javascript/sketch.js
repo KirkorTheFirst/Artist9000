@@ -71,12 +71,6 @@ function setup() {
 }
 
 function draw() {
-    //draws a box in the top-right to view drawings in the dataset drawn with drawAvg()
-    stroke(255, 0, 0);
-    strokeWeight(1);
-    line(0, 256, 256, 256);
-    line(256, 0, 256, 256);
-    strokeWeight(7);
 
     let rtn = false;
 
