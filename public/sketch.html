@@ -22,60 +22,12 @@
       </div>
     </div>
     <div id="note">Note: If you resize the page, you must reload the page for the canvas to be resized</div>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
+    <script src="javascript/jsonitems.js"></script>
+    <script src="javascript/heap.js"></script>
+    <script src="javascript/sketch.js"></script>
+    <script src="javascript/logic.js"></script>
     <script>
-      let drawing;
-      let prompts = [
-        'axe',
-        'baseball bat',
-        'bed',
-        'bench',
-        'bread',
-        'canoe',
-        'circle',
-        'diamond',
-        'door',
-        'ear',
-        'elbow',
-        'envelope',
-        'fork',
-        'hammer',
-        'hexagon',
-        'hockey stick',
-        'ladder',
-        'leg',
-        'line',
-        'lipstick',
-        'mountain',
-        'ocean',
-        'paper clip',
-        'pear',
-        'pencil',
-        'pillow',
-        'popsicle',
-        'rainbow',
-        'screwdriver',
-        'see saw',
-        'shoe',
-        'shorts',
-        'shovel',
-        'spoon',
-        'square',
-        'stairs',
-        'star',
-        'stitches',
-        'streetlight',
-        'string bean',
-        'suitcase',
-        'swing set',
-        'sword',
-        't-shirt',
-        'table',
-        'tent',
-        'triangle',
-        'underwear',
-        'wine bottle',
-        'zigzag'
-      ];
 
       //get a randomized prompt (if one doesnt exist already) and add it to session storage in case the page is reloaded
       let givenPrompt = sessionStorage.getItem("prompt");
@@ -94,28 +46,25 @@
         changeColor(r, g, b);
       }
 
+      
+      let startOfPrompt = 0;
+      let poopy = startOfPrompt;
+      for (let i = 0; i < completeDataset.length; i++) {
+        if (JSON.parse(completeDataset[i]).word === givenPrompt){
+          startOfPrompt = i;
+          break;
+        }
+      }
+
       //when the submit button is pressed, run the algorithm and go to the results page to display them
       document.getElementById("submit").onclick = function () {
+
         //first add the URL to the canvas as a png to the session storage, so that it can be in the html on results page
         let canvas = document.getElementById("defaultCanvas0");
         let ctx = canvas.getContext('2d')
         sessionStorage.setItem("canvasURL", canvas.toDataURL("img/png"));
 
         let strokes2 = getStrokes();
-
-        // console.log("slopes")
-        // console.log(slopes);
-
-        //this is just a test, but this is a 3d array directly from the JSON dataset (and im trying to draw it)
-        let dataSetDrawing = [[[0,17,25,31,63,72,78,99,101,109,116,121,147,169,185,192,190,181,158,96,69,15,5],[130,33,15,11,0,0,4,32,66,55,37,32,23,24,35,72,125,154,163,164,152,140,133]],[[180,192,218,255],[149,146,126,73]]]
-        getBoundingBox(dataSetDrawing);
-        drawAvg(dataSetDrawing);
-
-        // console.log("dataset slopes")
-        // console.log(getSlopes(dataSetDrawing))
-
-        // console.log("our slopes")
-        // console.log(getSlopes(strokes2))
 
         let bounds = getBoundingBox(strokes2);
         let xmin = bounds[0];
@@ -131,8 +80,6 @@
           }
         }
 
-        drawAvg(strokes2);
-
         //scaled down to a 255x255 box
         let strokes3 = getStrokes();
         let ratio = 255 / (xmax - xmin);
@@ -143,18 +90,13 @@
 
           }
         }
+   
+        getSimilarity(strokes3, ctx)
 
         drawAvg(strokes3);
 
-    
-        console.log("our floored strokes")
-        console.log(strokes2)
-
-        console.log("dataset strokes")
-        console.log(dataSetDrawing)
-
         // RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
-        let heap = compare();
+        let heap = compare(strokes3);
 
         //temporarily commented out for testing
         // window.location.href = 'results.html';
@@ -177,14 +119,7 @@
       
       window.addEventListener("mousedown", mouseDown);
       window.addEventListener("mouseup", mouseUp);
-
-      
       
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
-    <script src="javascript/jsonitems.js"></script>
-    <script src="javascript/heap.js"></script>
-    <script src="javascript/sketch.js"></script>
-    <script src="javascript/logic.js"></script>
   </body>
 </html>

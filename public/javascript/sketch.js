@@ -25,7 +25,7 @@ let alreadyStopped = false;
 let stroking = false;
 
 //timer for when to record new points on the line
-const recordTime = 50;
+const recordTime = 15;
 let recordTimer = recordTime;
 
 /**
@@ -49,7 +49,7 @@ let numberStrokes = 0;
 let numPoints = 0;
 
 //thresholds for recording change in mouse coordinates (stopping and rapid directional change)
-const stopThreshold = 0.1;
+const stopThreshold = 0;
 const changeThreshold = 12;
 
 function setup() {
@@ -74,8 +74,8 @@ function draw() {
     //draws a box in the top-right to view drawings in the dataset drawn with drawAvg()
     stroke(255, 0, 0);
     strokeWeight(1);
-    line(0, 255, 255, 255);
-    line(255, 0, 255, 255);
+    line(0, 256, 256, 256);
+    line(256, 0, 256, 256);
     strokeWeight(7);
 
     let rtn = false;
@@ -224,10 +224,6 @@ function record(){
         strokes[numberStrokes][1][numPoints] = mouseY;
 
         numPoints++;
-
-        //draw a red dot where the point in (dev tool, will delete later)
-        stroke(255, 0, 0);
-        ellipse(mouseX, mouseY, 5, 5);
     }
 }
 
