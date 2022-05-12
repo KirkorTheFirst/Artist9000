@@ -72,7 +72,7 @@ function compare(drawing, ctx){
 
     let map = getSimilarity(drawing, ctx);
     heap = toHeap(map);
-    return getTopTen(heap);
+    return toArray(heap);
 }
 
 /**
@@ -85,9 +85,9 @@ function compare(drawing, ctx){
  * @param {Heap} tempHeap 
  * @returns 2D array of top 10 guesses
  */
-function getTopTen(tempHeap){
+function toArray(tempHeap){
   let rtn = new Array();
-  for (let i = 1; i <= 10; i++){
+  for (let i = 1; i <= prompts.length; i++){
     let arr = tempHeap.pop();
     //re-convert to positive values
     arr[1] *= -1;
@@ -138,9 +138,7 @@ function getSimilarity(drawing, ctx){
         for (let i = 0; i < datasetImgData.length; i++) {
 
           if (datasetImgData[i] != userImgData[i]) {
-            //if the user's drawing is under-detailed thats especially bad (overdetailed is ok)
-            if (!datasetImgData[i]) tempSimilarity--;
-            tempSimilarity--;
+            tempSimilarity -= 2; //take 2 "points" away because its 2 different values
           }
         }
         
@@ -154,8 +152,9 @@ function getSimilarity(drawing, ctx){
       }
     }
 
-    const booster = 16; //boost the algorithm's confidence in the correct prompt by +x%
+    
     let chosenPrompt = sessionStorage.getItem("prompt")
+    const booster = 12; //boost the algorithm's confidence in the correct prompt by +x%
 
     //finally convert them all to percentages rounded to 2 decimal points so that they can be compared to each other
     for (let key of prompts){
@@ -167,6 +166,7 @@ function getSimilarity(drawing, ctx){
       
       if (chosenPrompt == key){
         let alteredSimilarity = similarityMap.get(chosenPrompt) + booster;
+        if (alteredSimilarity > 100) alteredSimilarity = 99.99; //idk its funnier if we never admit they actually got it spot on
         similarityMap.delete(chosenPrompt);
         similarityMap.set(chosenPrompt, alteredSimilarity);
       }
@@ -276,11 +276,25 @@ function getDrawingData(drawing, ctx){
   let rtn = ctx.getImageData(0, 0, datasetBoxWidth, datasetBoxWidth).data;
   let rtn2 = new Array();
   //convert to boolean array
+  const lightnessThreshold = (back[0] + back[1] + back[2]) / 6;
   for (let i = 0; i < rtn.length; i += 4){
-    if (rtn[i] == back[0] && rtn[i + 1] == back[1] && rtn[i + 2] == back[2]){
+    let r = rtn[i]
+    let g = rtn[i + 1]
+    let b = rtn[i + 2]
+    let a = rtn[i + 3]
+    if (r == back[0] && g == back[1] && b == back[2]){
       rtn2.push(true);
     } else {
-      rtn2.push(false);
+      //TODO: fixx
+      //check if the pixel is a "lighter" or "darker" color
+      if ((r + g + b) / 6 > lightnessThreshold){
+        //its "darker"
+        rtn2.push(true);
+      } else {
+        //its "lighter"
+        rtn2.push(false);
+      }
+      
     }
   }
 

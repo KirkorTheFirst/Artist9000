@@ -1,8 +1,12 @@
 <html lang="en-US">
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <link rel="stylesheet" href="sketch.css">
-    <link rel="stylesheet" href="results.css">
+    <link rel="stylesheet" href="styles/sketch.css">
+    <link rel="stylesheet" href="styles/results.css">
+
+    <script src="javascript/jsonitems.js"></script>
+    <script src="javascript/heap.js"></script>
+    <script src="javascript/logic.js"></script>
     <title>Artist 9000</title>
   </head>
   <body>
@@ -13,44 +17,18 @@
         </div>
         <table id="closest">
             <tr>
-                <th><span id="final">idk man</span></th>
+                <th><span id="final">test</span></th>
             </tr>
             <tr>
                 <td id="filler"></td>
             </tr>
         </table>
         <div class="title">Other Close Guesses</div>
-        <table id="closest">
-            <tr>
-                <td><span id="2">2nd closest result</span></td>
-            </tr>
-            <tr>
-                <td><span id="3">2nd closest result</span></td>
-            </tr>
-            <tr>
-                <td><span id="4">2nd closest result</span></td>
-            </tr>
-            <tr>
-                <td><span id="5">2nd closest result</span></td>
-            </tr>
-            <tr>
-                <td><span id="6">2nd closest result</span></td>
-            </tr>
-            <tr>
-                <td><span id="7">2nd closest result</span></td>
-            </tr>
-            <tr>
-                <td><span id="8">2nd closest result</span></td>
-            </tr>
-            <tr>
-                <td><span id="9">2nd closest result</span></td>
-            </tr>
-            <tr>
-                <td><span id="10">2nd closest result</span></td>
-            </tr>
+        <table id="closest2">
         </table>
 
         <div id="submit2">
+            <button id="show" class="submit">Show more</button>
             <button id="back" class="submit">Play Again!</button>
             <button id="back2" class="submit">Back to Main Menu</button>
           </div>
@@ -72,6 +50,27 @@
             sessionStorage.removeItem("prompt");
             window.location.href = 'index.html';
         }
+        document.getElementById("show").onclick = function () {
+            toggleExtras(this);
+        }
+
+        let toggle = 1;
+        function toggleExtras(toggleButton){
+            toggle *= -1;
+            if (toggle == -1){
+                let extras = document.getElementsByClassName("extras");
+                for (let row of extras){
+                    row.style.display = "block";
+                }
+                toggleButton.innerHTML = "Show less";
+            } else if (toggle == 1){
+                let extras = document.getElementsByClassName("extras");
+                for (let row of extras){
+                    row.style.display = "none";
+                }
+                toggleButton.innerHTML = "Show more";
+            }
+        }
 
         //first set the final one
         let finalPrompt = sessionStorage.getItem("prompt1");
@@ -79,18 +78,43 @@
         document.getElementById("final").innerHTML = finalPrompt + " [" + addZeros(finalSimilarity) + "%]";
 
         //now do the rest
-        for (let i = 2; i <= 10; i++){
+        for (let i = 2; i <= prompts.length; i++){
+            //make a new element
+            let row = document.createElement("tr");
+            let cell = document.createElement("td");
+            row.appendChild(cell);
+            let text = document.createElement("span");
+            text.setAttribute("id", i.toString());
+            cell.appendChild(text);
+
+            //add to second table
+            let others = document.getElementById("closest2");
+            others.appendChild(row);
+
+            //if its not in the top 10 hide for now
+            if (i > 10) row.setAttribute("class", "extras");
+
+            //now fill the text with the data we just collected
             let prompt = sessionStorage.getItem("prompt" + i.toString());
             let similarity = sessionStorage.getItem("similarity" + i.toString());
-            document.getElementById(i.toString()).innerHTML = prompt + " [" + addZeros(similarity) + "%]";
+            document.getElementById(i.toString()).innerHTML = i.toString() + ". " + prompt + " [" + addZeros(similarity) + "%]";
         }
 
         function addZeros(number){
-            let string = String(number).padEnd(5, '0');
+            let string = number.toString(); 
+            if (number < 10) string = "0" + number.toString();
+            if (Math.floor(number) !== number){
+                //it has a decimal already
+                string = string.padEnd(5, '0');
+            } else {
+                string = string.padEnd(4, '0');
+            }
+            
             //if there was no decimal originally, add one in
 
             //first temporarily concatenate a symbol
             string += "%";
+            //add a decimal if one never existed
             string = string.replace("00%", ".00%");
             //removes symbol
             return string.replace("%", "");

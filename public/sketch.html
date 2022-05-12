@@ -1,7 +1,7 @@
 <html lang="en-US">
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <link rel="stylesheet" href="sketch.css">
+    <link rel="stylesheet" href="styles/sketch.css">
     <title>Artist 9000</title>
   </head>
   <body>
@@ -17,6 +17,7 @@
         </div>
       </div>
       <div id="submit2">
+        <button id="newPrompt" class="submit" onclick="newPrompt()">New prompt</button>
         <button id="saveDrawing" class="submit" onclick="saveDrawing(givenPrompt)">Download</button>
         <button id="submit" class="submit">Computer Guess</button>
       </div>
@@ -29,14 +30,7 @@
     <script src="javascript/logic.js"></script>
     <script>
 
-      //get a randomized prompt (if one doesnt exist already) and add it to session storage in case the page is reloaded
-      let givenPrompt = sessionStorage.getItem("prompt");
-      if (givenPrompt == null){
-        givenPrompt = prompts[Math.floor(Math.random() * prompts.length)];
-        sessionStorage.setItem("prompt", givenPrompt);
-      }
-      //update the title so the user knows what the prompt is
-      document.getElementById("prompt").innerHTML = givenPrompt;
+      let givenPrompt = getPrompt();
 
       //when the paint input button is pressed, update the values in the interface
       document.getElementById("paint").oninput = function () {
@@ -46,7 +40,6 @@
         changeColor(r, g, b);
       }
 
-      
       let startOfPrompt = 0;
       let poopy = startOfPrompt;
       for (let i = 0; i < completeDataset.length; i++) {
@@ -92,15 +85,14 @@
         }
 
         // RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
-        let topTen = compare(strokes3, ctx);
+        let sorted = compare(strokes3, ctx);
         
         //add to sessionStorage
-        for (let i = 1; i <= 10; i++){
-          sessionStorage.setItem("prompt" + i.toString(), topTen[i - 1][0]);
-          sessionStorage.setItem("similarity" + i.toString(), topTen[i - 1][1]);
+        for (let i = 1; i <= prompts.length; i++){
+          sessionStorage.setItem("prompt" + i.toString(), sorted[i - 1][0]);
+          sessionStorage.setItem("similarity" + i.toString(), sorted[i - 1][1]);
         }
 
-        //temporarily commented out for testing
         window.location.href = 'results.html';
       }
 
@@ -121,7 +113,25 @@
       
       window.addEventListener("mousedown", mouseDown);
       window.addEventListener("mouseup", mouseUp);
+
+      function newPrompt(){
+        sessionStorage.removeItem("prompt");
+        givenPrompt = getPrompt();
+      }
       
+      function getPrompt(){
+        //get a randomized prompt (if one doesnt exist already) and add it to session storage in case the page is reloaded
+        let givenPrompt = sessionStorage.getItem("prompt");
+        if (givenPrompt == null){
+          givenPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+          sessionStorage.setItem("prompt", givenPrompt);
+        }
+
+        //update the title so the user knows what the prompt is
+        document.getElementById("prompt").innerHTML = givenPrompt;
+
+        return givenPrompt;
+      }
     </script>
   </body>
 </html>
