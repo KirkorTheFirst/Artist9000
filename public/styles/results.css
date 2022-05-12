@@ -1,0 +1,47 @@
+* {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#closest, #closest2 {
+    grid-column: 2 / 3;
+    text-align: center;
+}
+
+#closest td {
+    padding-left: 15%;
+}
+td, th {
+    background-color:lightgrey;
+    border: 2px solid black;
+    width: 40vw;
+    height: 10vh;
+    font-size: 22px;
+}
+td#filler{
+    background-color:#FFD139;
+    border: none;
+}
+
+#final {
+    background-color: inherit;
+    font-size: 34px;
+
+}
+
+#guess {
+    grid-column: 2 / 3;
+    margin: 5px;
+}
+#guess img{
+    border: 2px solid black;
+    width: 90%;
+    height: 90%;
+}
+
+span {
+    background-color: lightgrey;
+}
+
+.extras {
+    display: none;
+}
