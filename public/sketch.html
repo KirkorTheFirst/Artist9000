@@ -18,10 +18,11 @@
       </div>
       <div id="submit2">
         <button id="saveDrawing" class="submit" onclick="saveDrawing(givenPrompt)">Download</button>
-        <button id="submit" class="submit">Computer Guess</button>
+        <button id="submit" class="submit" onmousedown="showHidden()">Computer Guess</button>
       </div>
     </div>
-    <div id="note">Note: If you resize the page, you must reload the page for the canvas to be resized<image src="resources/loading.gif" id="hide"></image></div>
+    <div id="loading" class="hide">Processing Image</div>
+    <div id="note">Note: If you resize the page, you must reload the page for the canvas to be resized</div>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
     <script src="javascript/jsonitems.js"></script>
     <script src="javascript/heap.js"></script>
@@ -36,7 +37,7 @@
         sessionStorage.setItem("prompt", givenPrompt);
       }
       //update the title so the user knows what the prompt is
-      document.getElementById("prompt").innerHTML = givenPrompt;
+      document.getElementById("prompt").innerText = givenPrompt;
 
       //when the paint input button is pressed, update the values in the interface
       document.getElementById("paint").oninput = function () {
@@ -48,17 +49,31 @@
 
       
       let startOfPrompt = 0;
-      let poopy = startOfPrompt;
       for (let i = 0; i < completeDataset.length; i++) {
         if (JSON.parse(completeDataset[i]).word === givenPrompt){
           startOfPrompt = i;
           break;
         }
       }
+      let hiddenText = document.getElementById("loading")
+      function showHidden() {
+        hiddenText.classList.remove("hide")
+        let periods = '.'
+        let counter = 0
+        let originalText = hiddenText.innerText
+        while(true) {
+          hiddenText.innerText += periods
+          counter++
+          if(counter === 3) {
+            counter = 0
+            hiddenText.innerText = originalText
+          }
+          setTimeout(function(){}, 200)
+        }
+      }
 
       //when the submit button is pressed, run the algorithm and go to the results page to display them
       document.getElementById("submit").onclick = function () {
-
         //first add the URL to the canvas as a png to the session storage, so that it can be in the html on results page
         let canvas = document.getElementById("defaultCanvas0");
         let ctx = canvas.getContext('2d')
