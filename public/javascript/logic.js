@@ -1,58 +1,14 @@
 completeDataset = completeDataset.split('ß')
 completeDataset.pop()
 let jsonItems = {}
-let prompts = [
-  'axe',
-  'baseball bat',
-  'bed',
-  'bench',
-  'bread',
-  'canoe',
-  'circle',
-  'diamond',
-  'door',
-  'ear',
-  'elbow',
-  'envelope',
-  'fork',
-  'hammer',
-  'hexagon',
-  'hockey stick',
-  'ladder',
-  'leg',
-  'line',
-  'lipstick',
-  'mountain',
-  'ocean',
-  'paper clip',
-  'pear',
-  'pencil',
-  'pillow',
-  'popsicle',
-  'rainbow',
-  'screwdriver',
-  'see saw',
-  'shoe',
-  'shorts',
-  'shovel',
-  'spoon',
-  'square',
-  'stairs',
-  'star',
-  'stitches',
-  'streetlight',
-  'string bean',
-  'suitcase',
-  'swing set',
-  'sword',
-  't-shirt',
-  'table',
-  'tent',
-  'triangle',
-  'underwear',
-  'wine bottle',
-  'zigzag'
-];
+
+//dynamically add the prompts based on the json dataset (so that we can add/remove easily!)
+let prompts = [];
+for (let i = 0; i < completeDataset.length; i++){
+  let json = JSON.parse(completeDataset[i]);
+  if (!prompts.includes(json.word)) prompts.push(json.word);
+}
+
 let heap = new Heap(function(a, b) {
     if(a[1] < b[1]) {
         return -1
