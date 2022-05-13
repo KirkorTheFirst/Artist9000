@@ -110,7 +110,7 @@ function getSimilarity(drawing, ctx){
 
     
     let chosenPrompt = sessionStorage.getItem("prompt")
-    const booster = 12; //boost the algorithm's confidence in the correct prompt by +x%
+    const booster = 0; //boost the algorithm's confidence in the correct prompt by +x%
 
     //finally convert them all to percentages rounded to 2 decimal points so that they can be compared to each other
     for (let key of prompts){

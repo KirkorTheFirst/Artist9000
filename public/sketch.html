@@ -48,22 +48,22 @@
           break;
         }
       }
-      let hiddenText = document.getElementById("loading")
-      function showHidden() {
-        hiddenText.classList.remove("hide")
-        let periods = '.'
-        let counter = 0
-        let originalText = hiddenText.innerText
-        while(true) {
-          hiddenText.innerText += periods
-          counter++
-          if(counter === 3) {
-            counter = 0
-            hiddenText.innerText = originalText
-          }
-          setTimeout(function(){}, 200)
-        }
-      }
+      // let hiddenText = document.getElementById("loading")
+      // function showHidden() {
+      //   hiddenText.classList.remove("hide")
+      //   let periods = '.'
+      //   let counter = 0
+      //   let originalText = hiddenText.innerText
+      //   while(true) {
+      //     hiddenText.innerText += periods
+      //     counter++
+      //     if(counter === 3) {
+      //       counter = 0
+      //       hiddenText.innerText = originalText
+      //     }
+      //     setTimeout(function(){}, 200)
+      //   }
+      // }
 
       //when the submit button is pressed, run the algorithm and go to the results page to display them
       document.getElementById("submit").onclick = function () {
