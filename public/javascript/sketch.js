@@ -28,6 +28,10 @@ let stroking = false;
 const recordTime = 15;
 let recordTimer = recordTime;
 
+//meaning eraser is 20px wide
+const eraserWidth = 20;
+const pencilWidth = 7;
+
 /**
  * 3D array of our drawing in the format:
  * 
@@ -174,7 +178,7 @@ function equipEraser(){
 function equipPencil(){
     //set the cursor and size of the brush to pencil format
     eraser = false;
-    strokeWeight(7);
+    strokeWeight(pencilWidth);
     cursor('resources/pencil.png')
 }
 
@@ -187,7 +191,7 @@ function startStroke(){
     //start a stroke with the pencil tool on the canvas (check both of those conditions)
     if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height && !eraser){
         //make a new entry into the 3D array, record the starting point
-        strokeWeight(7);
+        strokeWeight(pencilWidth);
         strokes.push(new Array());
         strokes[numberStrokes][0] = new Array();
         strokes[numberStrokes][1] = new Array();
@@ -221,12 +225,6 @@ function record(){
     }
 }
 
-function logStrokes(){
-    //logs the 3D array into the console (dev tool, will delete later)
-    console.log("strokes")
-    console.log(strokes);
-}
-
 function getStrokes(){
     return strokes;
 }
@@ -250,15 +248,4 @@ function drawAvg(strokes){
             }
         }
     }
-}
-
-function drawBox(xmin, xmax, ymin, ymax){
-    stroke(255, 0, 0);
-    strokeWeight(1);
-    line(xmin, ymin, xmax, ymin)
-    line(xmin, ymin, xmin, ymax)
-    line(xmin, ymax, xmax, ymax)
-    line(xmax, ymin, xmax, ymax)
-    stroke(0, 0, 0);
-    strokeWeight(7);
 }
