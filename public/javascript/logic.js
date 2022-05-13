@@ -71,7 +71,7 @@ function toArray(tempHeap){
  */
 function getSimilarity(drawing, ctx){
     let similarityMap = new Map();
-    const totalPX = 512*512;
+    const totalPX = datasetBoxWidth*datasetBoxWidth;
     let userImgData = getDrawingData(drawing, ctx);
 
     //make all the entries into the map
@@ -79,6 +79,7 @@ function getSimilarity(drawing, ctx){
       similarityMap.set(prompt, 0);
     }
 
+    //TODO: turn it off baby mode
     for (let i = 0; i < completeDataset.length; i++){
       //first record the JSON you're on (you use it a lot)
       let json = JSON.parse(completeDataset[i])
@@ -110,7 +111,7 @@ function getSimilarity(drawing, ctx){
 
     
     let chosenPrompt = sessionStorage.getItem("prompt")
-    const booster = 12; //boost the algorithm's confidence in the correct prompt by +x%
+    const booster = 5; //boost the algorithm's confidence in the correct prompt by +x%
 
     //finally convert them all to percentages rounded to 2 decimal points so that they can be compared to each other
     for (let key of prompts){
@@ -127,10 +128,38 @@ function getSimilarity(drawing, ctx){
         similarityMap.set(chosenPrompt, alteredSimilarity);
       }
 
-      console.log(key + " : " + finalSimilarity + "%");
     }
 
     return similarityMap;
+}
+
+function* iterateDataset(similarityMap, ctx, i){
+  //first record the JSON you're on (you use it a lot)
+  let json = JSON.parse(completeDataset[i])
+      
+  //we only wanna analyze the drawing if it actually fits the category, i.e. it was recognized
+  if (json.recognized) {
+    //set a value for the similarity to this drawing
+    let tempSimilarity = totalPX;
+    //first get the image data
+    let datasetImgData = getDrawingData(json.drawing, ctx)
+
+    //loop through every pixel
+    for (let i = 0; i < datasetImgData.length; i++) {
+
+      if (datasetImgData[i] != userImgData[i]) {
+        tempSimilarity -= 2; //take 2 "points" away because its 2 different values
+      }
+    }
+    
+    let currentSimilarity = similarityMap.get(json.word);
+    if (tempSimilarity > currentSimilarity) {
+      //IM SORRY IDK HOW JS MAPS WORK (-lucas)
+      //so just deal with the fact that im deleting and making a new entry after
+      similarityMap.delete(json.word);
+      similarityMap.set(json.word, tempSimilarity);
+    }
+  }
 }
 
 /**
@@ -198,10 +227,6 @@ function getBoundingBox(drawing){
     ymax = ymin + 255;
     xmax = xmin + 255;
   }
-  //draw the perfect square box
-  if (xmin != null && xmax != null && ymin != null && ymax != null) drawBox(xmin, xmax, ymin, ymax)
-  
-  
 
   //return the bounds
   return [xmin, ymin, xmax, ymax]
