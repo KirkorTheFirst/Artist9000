@@ -1,6 +1,7 @@
 completeDataset = completeDataset.split('ß')
 completeDataset.pop()
 let jsonItems = {}
+let accuracy;
 
 //dynamically add the prompts based on the json dataset (so that we can add/remove easily!)
 let prompts = [];
@@ -79,23 +80,7 @@ function getSimilarity(drawing, ctx){
       similarityMap.set(prompt, 0);
     }
 
-    /**
-     * TODO: make this into an async function
-     * 
-     * iterating through dataset (first for loop) takes too long, shorten it
-     * the stuff inside the for loop takes these variables:
-     * 
-     * totalPX (line 74)
-     * userImgData (line 75)
-     * similarityMap (line 73)
-     * ctx (line 72)
-     * completeDataset (jsonitems.js : line 1)
-     * 
-     * ^^^ just require these as parameters to the async function
-     * 
-     * thanks finn! :>
-     */
-    for (let i = 0; i < completeDataset.length; i++){
+    for (let i = 0; i < completeDataset.length; i+=accuracy){
       //first record the JSON you're on (you use it a lot)
       let json = JSON.parse(completeDataset[i])
       

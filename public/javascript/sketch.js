@@ -19,6 +19,9 @@ let olddy;
 let dx = 0;
 let dy = 0;
 
+//dont allow drawing if modal is open
+let modalOpen = false;
+
 //checks if you've already stopped moving your mouse nearby to prevent multiple points being added
 let alreadyStopped = false;
 //see if youre drawing a line on the canvas
@@ -75,154 +78,186 @@ function setup() {
 }
 
 function draw() {
+    if (!modalOpen){
+        let rtn = false;
 
-    let rtn = false;
-
-    //update mouse distance values
-    olddx = dx;
-    olddy = dy;
-    dx = mouseX - oldMouseX;
-    dy = mouseY - oldMouseY;
-
-    if(mouseIsPressed) {
-
-        //check to see if you draw with color or erase (aka draw with background color)
-        if (eraser){
-            stroke(back[0], back[1], back[2]);
-
-        } else if (stroking) {
-
-            //record when the mouse stops completely (or very close to it)
-            let detectedStop = false;
-            if (dx >= -stopThreshold && dx <= stopThreshold) {
-                if (dy >= -stopThreshold && dy <= stopThreshold) {
-                    detectedStop = true;
-                    //if its already stopped before this (aka its been in the threshold before this) then dont update
-                    if (!alreadyStopped) {
-                        alreadyStopped = true;
-                        recordTimer = recordTime;
-                        record();
+        //update mouse distance values
+        olddx = dx;
+        olddy = dy;
+        dx = mouseX - oldMouseX;
+        dy = mouseY - oldMouseY;
+    
+        if(mouseIsPressed) {
+    
+            //check to see if you draw with color or erase (aka draw with background color)
+            if (eraser){
+                stroke(back[0], back[1], back[2]);
+    
+            } else if (stroking) {
+    
+                //record when the mouse stops completely (or very close to it)
+                let detectedStop = false;
+                if (dx >= -stopThreshold && dx <= stopThreshold) {
+                    if (dy >= -stopThreshold && dy <= stopThreshold) {
+                        detectedStop = true;
+                        //if its already stopped before this (aka its been in the threshold before this) then dont update
+                        if (!alreadyStopped) {
+                            alreadyStopped = true;
+                            recordTimer = recordTime;
+                            record();
+                        }
                     }
                 }
-            }
-            if (!detectedStop) {
-                //if the mouse has sped up past the threshold or the recording timer is less than 10 (you've gone a certain distance away) you can record again
-                if (dx < -stopThreshold && dx > stopThreshold) {
-                    if (dy < -stopThreshold && dy > stopThreshold) {
-                        if (recordTimer < 30) alreadyStopped = false;
+                if (!detectedStop) {
+                    //if the mouse has sped up past the threshold or the recording timer is less than 10 (you've gone a certain distance away) you can record again
+                    if (dx < -stopThreshold && dx > stopThreshold) {
+                        if (dy < -stopThreshold && dy > stopThreshold) {
+                            if (recordTimer < 30) alreadyStopped = false;
+                        }
                     }
+                    if (recordTimer < 10) alreadyStopped = false;
                 }
-                if (recordTimer < 10) alreadyStopped = false;
+    
+                //check to see if you should record a point based on how far away you are from the last point (not time or velocity based)
+                recordTimer -= (abs(dx) + abs(dy));
+                if (recordTimer <= 0) {
+                    recordTimer = recordTime;
+                    record();
+                }
+                
+                //also check if theres been a rapid change in the mouse velocity (aka you switch direction) and if so record a point
+                if (abs(abs(olddx) - abs(dx)) > changeThreshold || abs(abs(olddy) - abs(dy)) > changeThreshold) {
+                    record();
+                    recordTimer = recordTime;
+                }
+    
+                //finally, since we know you have the pencil tool equipped, set the color of the line to the chosen color
+                stroke(r, g, b);
             }
-
-            //check to see if you should record a point based on how far away you are from the last point (not time or velocity based)
-            recordTimer -= (abs(dx) + abs(dy));
-            if (recordTimer <= 0) {
-                recordTimer = recordTime;
-                record();
-            }
-            
-            //also check if theres been a rapid change in the mouse velocity (aka you switch direction) and if so record a point
-            if (abs(abs(olddx) - abs(dx)) > changeThreshold || abs(abs(olddy) - abs(dy)) > changeThreshold) {
-                record();
-                recordTimer = recordTime;
-            }
-
-            //finally, since we know you have the pencil tool equipped, set the color of the line to the chosen color
-            stroke(r, g, b);
+    
+            //draw a line and set the return to true
+            line(mouseX, mouseY, pmouseX, pmouseY)
+            rtn = true;
         }
-
-        //draw a line and set the return to true
-        line(mouseX, mouseY, pmouseX, pmouseY)
-        rtn = true;
+    
+        //finally update mouse coordinates
+        oldMouseX = mouseX;
+        oldMouseY = mouseY;
+    
+        return rtn;
     }
-
-    //finally update mouse coordinates
-    oldMouseX = mouseX;
-    oldMouseY = mouseY;
-
-    return rtn;
+    return false;
 }
 
 function clearScreen(){
-    //clear the canvas and reset background
-    clear();
-    background(back[0], back[1], back[2]);
-    //reset values that may update to their default values
-    numPoints = 0;
-    numberStrokes = 0;
-    strokes = [];
-    recordTimer = recordTime;
-    dx = 0;
-    dy = 0;
-    olddx = dx;
-    olddy = dy;
-}
-
-function changeColor(newr, newg, newb){
-    //changes the color of the pencil tool if its not the same color as the background (aka the eraser tool)
-    if (newr !== back[0] && newg !== back[1] && newb !== back[2]){
-        r = newr;
-        g = newg;
-        b = newb;
-    }
-}
-
-function equipEraser(){
-    //set the cursor and size of the brush to eraser format
-    eraser = true;
-    strokeWeight(20);
-    cursor('resources/eraser.png')
-}
-
-function equipPencil(){
-    //set the cursor and size of the brush to pencil format
-    eraser = false;
-    strokeWeight(pencilWidth);
-    cursor('resources/pencil.png')
-}
-
-function saveDrawing(prompt){
-    //download the current canvas state and name it the prompt given to the user
-    saveCanvas(c, prompt, "png")
-}
-
-function startStroke(){
-    //start a stroke with the pencil tool on the canvas (check both of those conditions)
-    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height && !eraser){
-        //make a new entry into the 3D array, record the starting point
-        strokeWeight(pencilWidth);
-        strokes.push(new Array());
-        strokes[numberStrokes][0] = new Array();
-        strokes[numberStrokes][1] = new Array();
-        record();
-        stroking = true;
-    }
-}
-
-function endStroke(){
-    //end a stroke, given its already begun
-    if (stroking && !eraser){
-        //record the last point in this stroke and update values
-        record();
-        numberStrokes++;
+    if (!modalOpen){
+        //clear the canvas and reset background
+        clear();
+        background(back[0], back[1], back[2]);
+        //reset values that may update to their default values
         numPoints = 0;
-        stroking = false;
+        numberStrokes = 0;
+        strokes = [];
+        recordTimer = recordTime;
+        dx = 0;
+        dy = 0;
+        olddx = dx;
+        olddy = dy; 
     }
     
 }
 
-function record(){
-    //records a point on a stroke into the 3D array
-
-    //check if you're making a duplicate point (happens when certain events overlap)
-    if (!(strokes[numberStrokes][0][numPoints - 1] == mouseX && strokes[numberStrokes][1][numPoints - 1] == mouseY)) {
-        //make a new entry into the 3D array
-        strokes[numberStrokes][0][numPoints] = mouseX;
-        strokes[numberStrokes][1][numPoints] = mouseY;
-
-        numPoints++;
+function changeColor(newr, newg, newb){
+    if (!modalOpen) {
+        //changes the color of the pencil tool if its not the same color as the background (aka the eraser tool)
+        if (newr !== back[0] && newg !== back[1] && newb !== back[2]) {
+            r = newr;
+            g = newg;
+            b = newb;
+        }
     }
+    
+}
+
+function equipEraser(){
+    if (!modalOpen){
+        //set the cursor and size of the brush to eraser format
+        eraser = true;
+        strokeWeight(20);
+        cursor('resources/eraser.png')
+    }
+    
+}
+
+function equipPencil(){
+    if (!modalOpen){
+        //set the cursor and size of the brush to pencil format
+        eraser = false;
+        strokeWeight(pencilWidth);
+        cursor('resources/pencil.png')
+    }
+    
+}
+
+function saveDrawing(prompt){
+    if (!modalOpen){
+        //download the current canvas state and name it the prompt given to the user
+        saveCanvas(c, prompt, "png")
+    }
+    
+}
+
+function startStroke(){
+    if (!modalOpen){
+        //start a stroke with the pencil tool on the canvas (check both of those conditions)
+        if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height && !eraser) {
+            //make a new entry into the 3D array, record the starting point
+            strokeWeight(pencilWidth);
+            strokes.push(new Array());
+            strokes[numberStrokes][0] = new Array();
+            strokes[numberStrokes][1] = new Array();
+            record();
+            stroking = true;
+        }
+    }
+    
+}
+
+function endStroke(){
+    if (!modalOpen){
+        //end a stroke, given its already begun
+        if (stroking && !eraser) {
+            //record the last point in this stroke and update values
+            record();
+            numberStrokes++;
+            numPoints = 0;
+            stroking = false;
+        }
+    }
+}
+
+function toggleModal(){
+    if (!modalOpen){
+        modalOpen = true;
+    } else {
+        modalOpen = false;
+    }
+}
+
+function record(){
+    if (!modalOpen){
+        //records a point on a stroke into the 3D array
+
+        //check if you're making a duplicate point (happens when certain events overlap)
+        if (!(strokes[numberStrokes][0][numPoints - 1] == mouseX && strokes[numberStrokes][1][numPoints - 1] == mouseY)) {
+            //make a new entry into the 3D array
+            strokes[numberStrokes][0][numPoints] = mouseX;
+            strokes[numberStrokes][1][numPoints] = mouseY;
+
+            numPoints++;
+        }
+    }
+    
 }
 
 function getStrokes(){
