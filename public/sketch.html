@@ -6,6 +6,10 @@
   </head>
   <body>
     <div class="container">
+      <div class="slider">
+        <span id="slidertext">Accuracy is at 25%</span>
+        <input id="rangeslider" type="range" min="1" max="100" value="25">
+      </div>
       <div class="title">Draw This: <span id="prompt"></span></div>
       <div id="game">
         <div id="canvas"></div>
@@ -32,7 +36,15 @@
     <script>
 
       let givenPrompt = getPrompt();
-
+      let accuracyValue = null
+      let slider = document.getElementById("rangeslider")
+      let sliderText = document.getElementById('slidertext')
+      sliderText.innerText = 'Accuracy is at ' + slider.value + '%'
+      slider.oninput = function() {
+        sliderText.innerText = 'Accuracy is at ' + slider.value + '%'
+        accuracyValue = slider.value
+        console.log(accuracyValue)
+      }
       //when the paint input button is pressed, update the values in the interface
       document.getElementById("paint").oninput = function () {
         let r = parseInt(this.value.substring(1, 3), 16);
@@ -48,22 +60,6 @@
           break;
         }
       }
-      // let hiddenText = document.getElementById("loading")
-      // function showHidden() {
-      //   hiddenText.classList.remove("hide")
-      //   let periods = '.'
-      //   let counter = 0
-      //   let originalText = hiddenText.innerText
-      //   while(true) {
-      //     hiddenText.innerText += periods
-      //     counter++
-      //     if(counter === 3) {
-      //       counter = 0
-      //       hiddenText.innerText = originalText
-      //     }
-      //     setTimeout(function(){}, 200)
-      //   }
-      // }
 
       //when the submit button is pressed, run the algorithm and go to the results page to display them
       document.getElementById("submit").onclick = function () {
