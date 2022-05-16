@@ -42,10 +42,20 @@ td#filler{
     height: 90%;
 }
 
-span {
-    background-color: lightgrey;
+td * {
+    /* make it clear so that its easier to change */
+    background-color: rgb(0, 0, 0, 0);
+}
+
+#final {
+    /* make it clear so that its easier to change */
+    background-color: rgb(0, 0, 0, 0);
 }
 
 .extras {
     display: none;
+}
+
+.right {
+    background-color: rgba(25, 200, 25, 0.5)
 }

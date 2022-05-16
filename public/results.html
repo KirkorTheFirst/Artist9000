@@ -17,7 +17,7 @@
         </div>
         <table id="closest">
             <tr>
-                <th><span id="final">test</span></th>
+                <th id="finalHolder"><span id="final">test</span></th>
             </tr>
             <tr>
                 <td id="filler"></td>
@@ -62,20 +62,24 @@
                 for (let row of extras){
                     row.style.display = "block";
                 }
-                toggleButton.innerHTML = "Show less";
+                toggleButton.innerText = "Show less";
             } else if (toggle == 1){
                 let extras = document.getElementsByClassName("extras");
                 for (let row of extras){
                     row.style.display = "none";
                 }
-                toggleButton.innerHTML = "Show more";
+                toggleButton.innerText = "Show more";
             }
         }
 
         //first set the final one
         let finalPrompt = sessionStorage.getItem("prompt1");
+        
         let finalSimilarity = sessionStorage.getItem("similarity1");
-        document.getElementById("final").innerHTML = finalPrompt + " [" + addZeros(finalSimilarity) + "%]";
+        document.getElementById("final").innerText = finalPrompt + " [" + addZeros(finalSimilarity) + "%]";
+        if (finalPrompt == givenPrompt2) {
+            document.getElementById("finalHolder").setAttribute("class", "right")
+        }
 
         //now do the rest
         for (let i = 2; i <= prompts.length; i++){
@@ -83,9 +87,13 @@
             let row = document.createElement("tr");
             let cell = document.createElement("td");
             row.appendChild(cell);
+            //add twos text boxes to cell
             let text = document.createElement("span");
-            text.setAttribute("id", i.toString());
+            text.setAttribute("id", "prompt" + i.toString());
             cell.appendChild(text);
+            let sim = document.createElement("span");
+            sim.setAttribute("id", "similarity" + i.toString());
+            cell.appendChild(sim);
 
             //add to second table
             let others = document.getElementById("closest2");
@@ -97,10 +105,17 @@
             //now fill the text with the data we just collected
             let prompt = sessionStorage.getItem("prompt" + i.toString());
             let similarity = sessionStorage.getItem("similarity" + i.toString());
-            document.getElementById(i.toString()).innerHTML = i.toString() + ". " + prompt + " [" + addZeros(similarity) + "%]";
+            document.getElementById("prompt" + i.toString()).innerText = i.toString() + ". " + prompt;
+            document.getElementById("similarity" + i.toString()).innerText = " [" + addZeros(similarity) + "%]";
+
+            //check if we highlight it
+            if (prompt == givenPrompt2){
+                cell.setAttribute("class", "right");
+            }
         }
 
         function addZeros(number){
+            number = parseFloat(number);
             let string = number.toString(); 
             if (number < 10) string = "0" + number.toString();
             if (Math.floor(number) !== number){
