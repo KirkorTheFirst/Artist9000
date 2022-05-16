@@ -28,6 +28,10 @@ td#filler{
 
 }
 
+#back2{
+  margin: 5px;
+}
+
 #guess {
     grid-column: 2 / 3;
     margin: 5px;
