@@ -1,3 +1,4 @@
+//parse the dataset to an array
 completeDataset = completeDataset.split('ß')
 completeDataset.pop()
 let jsonItems = {}
@@ -10,6 +11,7 @@ for (let i = 0; i < completeDataset.length; i++){
   if (!prompts.includes(json.word)) prompts.push(json.word);
 }
 
+//comparator is a min heap
 let heap = new Heap(function(a, b) {
     if(a[1] < b[1]) {
         return -1
@@ -19,6 +21,7 @@ let heap = new Heap(function(a, b) {
         return 1
     }
 })
+
 const datasetBoxWidth = 512;
 
 /**
@@ -26,7 +29,6 @@ const datasetBoxWidth = 512;
  * @returns 2D array of top 10 guesses and its similarity (in order)
  */
 function compare(drawing, ctx){
-
     let map = getSimilarity(drawing, ctx);
     heap = toHeap(map);
     return toArray(heap);
@@ -95,7 +97,7 @@ function getSimilarity(drawing, ctx){
         for (let i = 0; i < datasetImgData.length; i++) {
 
           if (datasetImgData[i] != userImgData[i]) {
-            tempSimilarity -= 2; //take 2 "points" away because its 2 different values
+            tempSimilarity--; //take 2 "points" away because its 2 different values
           }
         }
         
@@ -133,35 +135,6 @@ function getSimilarity(drawing, ctx){
     return similarityMap;
 }
 
-function* iterateDataset(similarityMap, ctx, i){
-  //first record the JSON you're on (you use it a lot)
-  let json = JSON.parse(completeDataset[i])
-      
-  //we only wanna analyze the drawing if it actually fits the category, i.e. it was recognized
-  if (json.recognized) {
-    //set a value for the similarity to this drawing
-    let tempSimilarity = totalPX;
-    //first get the image data
-    let datasetImgData = getDrawingData(json.drawing, ctx)
-
-    //loop through every pixel
-    for (let i = 0; i < datasetImgData.length; i++) {
-
-      if (datasetImgData[i] != userImgData[i]) {
-        tempSimilarity -= 2; //take 2 "points" away because its 2 different values
-      }
-    }
-    
-    let currentSimilarity = similarityMap.get(json.word);
-    if (tempSimilarity > currentSimilarity) {
-      //IM SORRY IDK HOW JS MAPS WORK (-lucas)
-      //so just deal with the fact that im deleting and making a new entry after
-      similarityMap.delete(json.word);
-      similarityMap.set(json.word, tempSimilarity);
-    }
-  }
-}
-
 /**
  * @param {Map} map of similar categories and its similarity value (%)
  * @returns sorted heap of items based on similarity
@@ -176,6 +149,11 @@ function toHeap(map){
     return heap;
 }
 
+/**
+ * gets the coordinates for a square bounding box containing all of the points in the drawing
+ * @param {Array} drawing 3D array of coordinates representing the drawing
+ * @returns array containing the xmin, xmax, ymin and ymax values
+ */
 function getBoundingBox(drawing){
   //gets the min and max x and y values for all the points in your drawing
   let xmin = null;
@@ -205,21 +183,9 @@ function getBoundingBox(drawing){
   }
   //to make the box a perfect square, pick the dimensions based on which direction is traveled further (more x change or y change?)
   if (xmax - xmin > ymax - ymin){
-    // //center the box so that the drawing is in the middle
-    // for (let i = 0; i < (xmax - xmin)/ 2; i++){
-    //   ymax++;
-    //   ymin--;
-    //   if (xmax - xmin <= ymax - ymin) break;
-    // }
     ymax = ymin + (xmax - xmin)
   }
   else if (xmax - xmin <= ymax - ymin){
-    // //center the box so that the drawing is in the middle
-    // for (let i = 0; i < (ymax - ymin)/ 2; i++){
-    //   xmax++;
-    //   xmin--;
-    //   if (xmax - xmin >= ymax - ymin) break;
-    // }
     xmax = xmin + (ymax - ymin)
   }
   //scale up if the box is too small
@@ -266,7 +232,7 @@ function getDrawingData(drawing, ctx){
     if (r == back[0] && g == back[1] && b == back[2]){
       rtn2.push(true);
     } else {
-      //TODO: fixx
+      //TODO: fix
       //check if the pixel is a "lighter" or "darker" color
       if ((r + g + b) / 6 > lightnessThreshold){
         //its "darker"
@@ -278,7 +244,6 @@ function getDrawingData(drawing, ctx){
       
     }
   }
-
   ctx.putImageData(clearData, 0, 0);
 
   //return array

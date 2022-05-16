@@ -36,34 +36,43 @@
 
     <script>
 
+        //check if user came from sketch.html or not
         if (sessionStorage.getItem("canvasURL") == null) window.location.href = 'index.html';
 
+        //put the user drawing in the HTMl
         document.getElementById("drawing").setAttribute("src", sessionStorage.getItem("canvasURL"))
 
         let givenPrompt2 = sessionStorage.getItem("prompt");
 
+        //handle button pressed
         document.getElementById("back").onclick = function () {
+            //removes the prompt and goes to the sketch.html page
             sessionStorage.removeItem("prompt");
             window.location.href = 'sketch.html';
         }
         document.getElementById("back2").onclick = function () {
+            //removes the prompt and goes back to the main menu
             sessionStorage.removeItem("prompt");
             window.location.href = 'index.html';
         }
         document.getElementById("show").onclick = function () {
+            //shows the extra guessed (#11-#50)
             toggleExtras(this);
         }
 
         let toggle = 1;
+        //toggles the #11 through #50 guesses to be shown on the page and alters the text of the toggle button
         function toggleExtras(toggleButton){
             toggle *= -1;
             if (toggle == -1){
+                //show the extras and update button
                 let extras = document.getElementsByClassName("extras");
                 for (let row of extras){
                     row.style.display = "block";
                 }
                 toggleButton.innerText = "Show less";
             } else if (toggle == 1){
+                //hide the extras and update button again
                 let extras = document.getElementsByClassName("extras");
                 for (let row of extras){
                     row.style.display = "none";
@@ -72,7 +81,7 @@
             }
         }
 
-        //first set the final one
+        //first set the final guess on the HTML (id's have different names)
         let finalPrompt = sessionStorage.getItem("prompt1");
         
         let finalSimilarity = sessionStorage.getItem("similarity1");
@@ -81,7 +90,7 @@
             document.getElementById("finalHolder").setAttribute("class", "right")
         }
 
-        //now do the rest
+        //now do the rest of the guesses, first add all the elements to the HTML dynamically
         for (let i = 2; i <= prompts.length; i++){
             //make a new element
             let row = document.createElement("tr");
@@ -114,7 +123,9 @@
             }
         }
 
+        //appends extra zeros as necessary to the percentage so its in the format xx.xx% (no matter what)
         function addZeros(number){
+            //input is a string (thats how its stored in sessionStorage), so convert to Number (specifically a decimal)
             number = parseFloat(number);
             let string = number.toString(); 
             if (number < 10) string = "0" + number.toString();

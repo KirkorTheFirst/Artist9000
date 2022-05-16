@@ -1,3 +1,15 @@
+/**
+ * the "dataset" from google consisting of JSONs representing each drawing
+ * 
+ * theres 100 JSONs per prompt, all prompts arranged alphabetically and in order (order is important for processing)
+ * 
+ * word : the prompt
+ * countrycode : where the drawing was drawn
+ * timestamp : when it was drawn
+ * recognized : whether the google AI guessed it right
+ * key_id : unique id per every drawing
+ * drawing : 3D array consisting of x and y coordinates for the points in each stroke of the drawing
+ */
 let completeDataset = 
 '{"word":"axe","countrycode":"KR","timestamp":"2017-03-22 06:30:48.17146 UTC","recognized":true,"key_id":"5344373355053056","drawing":[[[2,38,71,108,128,139],[10,24,31,22,14,4]],[[0,13,13,3,14,50,74,143],[20,70,98,124,122,103,96,95]],[[134,133,144,144],[0,84,207,253]],[[131,148,154,153,176,176,171,154],[8,4,6,79,236,249,253,255]]]}ß'+
 '{"word":"axe","countrycode":"SE","timestamp":"2017-01-27 21:49:54.40682 UTC","recognized":true,"key_id":"6545061917491200","drawing":[[[54,37,7,5,12,0,7,34,52,56,52,42,38],[66,49,8,11,63,105,105,89,84,88,149,205,255]],[[59,62,88,95,97],[66,13,1,1,33]]]}ß'+

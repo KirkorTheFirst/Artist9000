@@ -6,7 +6,7 @@
   </head>
   <body>
     <div class="container">
-      <div class="title">Draw This: <span id="prompt"></span></div>
+      <div class="title" id="drawPrompt">Draw This: <span id="prompt"></span></div>
       <div id="game">
         <div id="canvas"></div>
         <div id="tools">
@@ -27,7 +27,7 @@
           <div id="slider">
             <span>Accuracy</span>
             <input type="range" min="1" max="100" width="400px" id="accuracy">
-            <span><span id="sliderval"></span>%</span>
+            <div id="accuracyDisplay"><span id="sliderval"></span>%</div>
             <div>(Determines how accurate the computer guess will be)</div>
             <div id="warning">WARNING: the computer may take 2-3 minutes to run.</div>
           </div>
@@ -54,7 +54,7 @@
         modal.style.display = "block";
       }
 
-      //close modal if click is out of modal box
+      //close modal if click is out of modal content box
       window.onclick = function(event) {
         if (event.target == modal) {
           toggleModal();
@@ -70,13 +70,15 @@
         changeColor(r, g, b);
       }
 
+      //accuracy value to start at when page loads
       let sliderAccuracy = 50;
 
       //set the accuracy
       document.getElementById("accuracy").setAttribute("value", sliderAccuracy.toString());
       document.getElementById("sliderval").innerText = sliderAccuracy.toString();
 
-      const dangerThreshold = 75;
+      //the point at which the entire dataset will run
+      const dangerThreshold = 67;
       
       //when the slider changes update the html and the variable
       document.getElementById("accuracy").oninput = function () {
@@ -86,15 +88,6 @@
           document.getElementById("warning").style.visibility = 'visible';
         } else {
           document.getElementById("warning").style.visibility = 'hidden';
-        }
-      }
-
-      let startOfPrompt = 0;
-      let poopy = startOfPrompt;
-      for (let i = 0; i < completeDataset.length; i++) {
-        if (JSON.parse(completeDataset[i]).word === givenPrompt){
-          startOfPrompt = i;
-          break;
         }
       }
 
@@ -119,6 +112,7 @@
           }
         }
         
+        //get the bounding box coords
         let bounds = getBoundingBox(strokes2);
         let xmin = bounds[0];
         let xmax = bounds[2];
@@ -136,7 +130,7 @@
           }
         }
 
-        // RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
+        //RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
         let sorted = compare(strokes3, ctx);
         
         //add to sessionStorage
@@ -145,9 +139,11 @@
           sessionStorage.setItem("similarity" + i.toString(), sorted[i - 1][1]);
         }
 
+        //go to results yay
         window.location.href = 'results.html';
       }
 
+      //it wont let me ad JSdoc comments, but this sends a signal to the p5.js interface when the mouse is pressed
       function mousePress (pressing) {
         if (pressing){
           startStroke();
@@ -166,11 +162,13 @@
       window.addEventListener("mousedown", mouseDown);
       window.addEventListener("mouseup", mouseUp);
 
+      //re-rolls the prompt
       function newPrompt(){
         sessionStorage.removeItem("prompt");
         givenPrompt = getPrompt();
       }
       
+      //gets a prompt
       function getPrompt(){
         //get a randomized prompt (if one doesnt exist already) and add it to session storage in case the page is reloaded
         let givenPrompt = sessionStorage.getItem("prompt");
