@@ -40,17 +40,30 @@ const pencilWidth = 7;
  * 
  * [
  *   [ //stroke 1
- *     [x1, x2, x3... ] //x coords of each point in order
- *     [y1, y2, y3... ] //y coords of each point in order
+ *     [x1, x2, x3... ], //x coords of each point in order
+ *     [y1, y2, y3... ], //y coords of each point in order
+ *     ...
  *   ],
  *   [ //stroke 2
- *     [x1, x2, x3... ]
- *     [y1, y2, y3... ]
- *   ] ...
+ *     [x1, x2, x3... ],
+ *     [y1, y2, y3... ],
+ *     ...
+ *   ],
+ *   ...
  * ]
  * 
  */
 let strokes = new Array();
+/**
+ * 2D array of each color per stroke of the drawing in the format:
+ * 
+ * [
+ *   [r, g, b], //rgb value for first stroke
+ *   [r, g, b], //second stroke
+ *   ...
+ * ]
+ */
+let rgb = new Array();
 //also record number of strokes so far and number of points per stroke (will update if you are making a new stroke)
 let numberStrokes = 0;
 let numPoints = 0;
@@ -158,6 +171,7 @@ function clearScreen(){
         numPoints = 0;
         numberStrokes = 0;
         strokes = [];
+        rgb = [];
         recordTimer = recordTime;
         dx = 0;
         dy = 0;
@@ -170,7 +184,7 @@ function clearScreen(){
 function changeColor(newr, newg, newb){
     if (!modalOpen) {
         //changes the color of the pencil tool if its not the same color as the background (aka the eraser tool)
-        if (newr !== back[0] && newg !== back[1] && newb !== back[2]) {
+        if (!(newr == back[0] && newg == back[1] && newb == back[2])) {
             r = newr;
             g = newg;
             b = newb;
@@ -213,9 +227,13 @@ function startStroke(){
         if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height && !eraser) {
             //make a new entry into the 3D array, record the starting point
             strokeWeight(pencilWidth);
+            //add a new stroke array
             strokes.push(new Array());
             strokes[numberStrokes][0] = new Array();
             strokes[numberStrokes][1] = new Array();
+            //add a new rgb array
+            rgb.push([r, g, b]);
+            //record starting point
             record();
             stroking = true;
         }
@@ -264,12 +282,29 @@ function getStrokes(){
     return strokes;
 }
 
-function drawAvg(strokes){
+function getColors(){
+    return rgb;
+}
+
+/**
+ * draws an "average line" by connecting the points in the color that the stroke was originally drawn in
+ * @param {*} strokes 
+ * @param {*} colors 
+ */
+function drawAvg(strokes, colors){
     //draws the averages of each stroke on the canvas by looping through the 3D array and connecting a straight line between every point
-    for (let stroke2 of strokes){
+    for (let k = 0; k < strokes.length; k++){
+        let stroke2 = strokes[k];
+        let rgb2;
+        if (colors != null){
+            rgb2 = colors[k];
+        } else {
+            //this drawing is from the dataset, just draw it all black
+            rgb2 = [0, 0, 0];
+        }
         let prevX;
         let prevY;
-        stroke(255, 0, 0);
+        stroke(rgb2[0], rgb2[1], rgb2[2]);
         for (let i = 0; i < stroke2[0].length; i++){
             let x = stroke2[0][i];
             let y = stroke2[1][i];

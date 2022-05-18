@@ -65,14 +65,6 @@
         }
       }
 
-      //when the paint input button is pressed, update the values in the interface
-      document.getElementById("paint").oninput = function () {
-        let r = parseInt(this.value.substring(1, 3), 16);
-        let g = parseInt(this.value.substring(3, 5), 16);
-        let b = parseInt(this.value.substring(5, 7), 16);
-        changeColor(r, g, b);
-      }
-
       //accuracy value to start at when page loads
       let sliderAccuracy = 8;
 
@@ -106,6 +98,7 @@
         sessionStorage.setItem("canvasURL", canvas.toDataURL("img/png"));
 
         let strokes2 = getStrokes();
+        
 
         //round up/down each coordinate to make it easier to compare to the dataset (whole integers)
         for (let stroke2 of strokes2){
@@ -133,8 +126,10 @@
           }
         }
 
+        let colors = getColors();
+
         //RUN THE BIG SCARY ALGORITHM HERE AND GET A HEAP
-        let sorted = compare(strokes3, ctx);
+        let sorted = compare(strokes3, ctx, colors);
         
         //add to sessionStorage
         for (let i = 1; i <= prompts.length; i++){
@@ -143,11 +138,18 @@
         }
 
         //go to results yay
-        window.location.href = 'results.html';
+        window.location.href = 'results.html'; 
       }
 
       //it wont let me ad JSdoc comments, but this sends a signal to the p5.js interface when the mouse is pressed
       function mousePress (pressing) {
+        //update the RGB before your stroke
+        let input = document.getElementById("paint");
+        let r = parseInt(input.value.substring(1, 3), 16);
+        let g = parseInt(input.value.substring(3, 5), 16);
+        let b = parseInt(input.value.substring(5, 7), 16);
+        changeColor(r, g, b);
+        
         if (pressing){
           startStroke();
         } else {

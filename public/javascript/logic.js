@@ -27,6 +27,7 @@ const datasetBoxWidth = 512;
 
 /**
  * @param {Array} drawing 3d array of our drawing
+ * @param {Array} colors 2d array of rgb values per stroke (in order)
  * @returns 2D array of top 10 guesses and its similarity (in order)
  */
 function compare(drawing, ctx){
@@ -72,12 +73,13 @@ function toArray(tempHeap){
  * compares our drawing to each items and ranks similarity
  * @param {Array} drawing the user-created drawing 3d array
  * @param {CanvasRenderingContext2D} ctx 2D context of canvas
+ * @param {Array} colors 2D array of the RGB used per stroke (in order)
  * @returns map of all items and their similarity to our drawing
  */
-function getSimilarity(drawing, ctx){
+function getSimilarity(drawing, ctx, colors){
     let similarityMap = new Map();
     const totalPX = datasetBoxWidth*datasetBoxWidth;
-    let userImgData = getDrawingData(drawing, ctx);
+    let userImgData = getDrawingData(drawing, ctx, colors);
 
     //make all the entries into the map
     for (let prompt of prompts){
@@ -93,7 +95,7 @@ function getSimilarity(drawing, ctx){
         //set a value for the similarity to this drawing
         let tempSimilarity = totalPX;
         //first get the image data
-        let datasetImgData = getDrawingData(json.drawing, ctx)
+        let datasetImgData = getDrawingData(json.drawing, ctx, null)
 
         //loop through every pixel
         for (let i = 0; i < datasetImgData.length; i++) {
@@ -204,9 +206,10 @@ function getBoundingBox(drawing){
  * gets the image data for a 256x256 image
  * @param {Array} drawing 3D array of drawing translated to a 256x256 space
  * @param {CanvasRenderingContext2D} ctx 2D context of canvas
+ * @param {Array} colors 2D array of colors used in strokes (since dataset has no color, if colors = null then only use black)
  * @returns boolean array of image data (true = background, false = not background)
  */
-function getDrawingData(drawing, ctx){
+function getDrawingData(drawing, ctx, colors){
   //first clear the top-left 255x255 space of anything (make it all white for now)
   let clearData = ctx.getImageData(0, 0, datasetBoxWidth, datasetBoxWidth);
   //the data comes in the format RGBA, so every 4 entries represents 1 px
@@ -221,7 +224,7 @@ function getDrawingData(drawing, ctx){
   ctx.putImageData(clearData, 0, 0);
 
   //draw the drawing in and get the image data for that space
-  drawAvg(drawing);
+  drawAvg(drawing, colors);
   let rtn = ctx.getImageData(0, 0, datasetBoxWidth, datasetBoxWidth).data;
   let rtn2 = new Array();
   //convert to boolean array
@@ -234,13 +237,15 @@ function getDrawingData(drawing, ctx){
     if (r == back[0] && g == back[1] && b == back[2]){
       rtn2.push(true);
     } else {
-      //TODO: fix
       //check if the pixel is a "lighter" or "darker" color
-      if ((r + g + b) / 6 > lightnessThreshold){
-        //its "darker"
+
+      let hsp = getHSP(r, g, b);
+
+      if (hsp > lightnessThreshold){
+        //it is light
         rtn2.push(true);
       } else {
-        //its "lighter"
+        //it is dark
         rtn2.push(false);
       }
       
@@ -251,4 +256,26 @@ function getDrawingData(drawing, ctx){
   //return array
   return rtn2;
 
+}
+
+/**
+ * get HSP (hue-saturation-percieved brightness), like a black-and-white value for how bright the color is
+ * @param {Number} r red value of color
+ * @param {Number} g green value of color
+ * @param {Number} b blue value of color
+ * @returns HSP value for that color
+ */
+function getHSP(r, g, b){
+  
+  //concept, equation, constants from http://alienryderflex.com/hsp.html
+  //these are the degrees to which your eye processes each color (as percentages which add up to 1, or 100%) 
+  const r_perception = 0.299;
+  const g_perception = 0.587;
+  const b_perception = 0.114;
+  let hsp = Math.sqrt(
+    r_perception * (r * r) +
+    g_perception * (g * g) +
+    b_perception * (b * b)
+  );
+  return hsp;
 }
