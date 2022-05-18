@@ -183,7 +183,7 @@ function equipEraser(){
     if (!modalOpen){
         //set the cursor and size of the brush to eraser format
         eraser = true;
-        strokeWeight(20);
+        strokeWeight(eraserWidth);
         cursor('resources/eraser.png')
     }
     

@@ -3,6 +3,7 @@ completeDataset = completeDataset.split('ß')
 completeDataset.pop()
 let jsonItems = {}
 let accuracy;
+let algorithmRunning = false;
 
 //dynamically add the prompts based on the json dataset (so that we can add/remove easily!)
 let prompts = [];
@@ -29,6 +30,7 @@ const datasetBoxWidth = 512;
  * @returns 2D array of top 10 guesses and its similarity (in order)
  */
 function compare(drawing, ctx){
+  algorithmRunning = true;
     let map = getSimilarity(drawing, ctx);
     heap = toHeap(map);
     return toArray(heap);

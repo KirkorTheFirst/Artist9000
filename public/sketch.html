@@ -28,8 +28,11 @@
             <span>Accuracy</span>
             <input type="range" min="1" max="100" width="400px" id="accuracy">
             <div id="accuracyDisplay"><span id="sliderval"></span>%</div>
-            <div>(Determines how accurate the computer guess will be)</div>
-            <div id="warning">WARNING: the computer may take 2-3 minutes to run.</div>
+            <div style="margin-bottom: 8px;">(Determines how accurate the computer guess will be)</div>
+            <span id="warning">
+              <div>WARNING: the algorithm may take 2-3 minutes to finish.</div>
+              <div>(you may want to keep the inspect tool open to prevent this website from crashing)</div>
+            </span>
           </div>
           <button id="submit" class="submit">Go!</button>
         </div>
@@ -56,7 +59,7 @@
 
       //close modal if click is out of modal content box
       window.onclick = function(event) {
-        if (event.target == modal) {
+        if (event.target == modal && !algorithmRunning) {
           toggleModal();
           modal.style.display = "none";
         }
@@ -71,7 +74,7 @@
       }
 
       //accuracy value to start at when page loads
-      let sliderAccuracy = 50;
+      let sliderAccuracy = 8;
 
       //set the accuracy
       document.getElementById("accuracy").setAttribute("value", sliderAccuracy.toString());
