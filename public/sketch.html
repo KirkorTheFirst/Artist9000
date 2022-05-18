@@ -101,11 +101,12 @@
         
 
         //round up/down each coordinate to make it easier to compare to the dataset (whole integers)
-        for (let stroke2 of strokes2){
-          for (let i = 0; i < stroke2[0].length; i++){
-            stroke2[0][i] = Math.floor(stroke2[0][i]);
-            stroke2[1][i] = Math.floor(stroke2[1][i]);
-          }
+        for (let stroke2 of strokes2){ 
+            for (let i = 0; i < stroke2[0].length; i++){
+              stroke2[0][i] = Math.floor(stroke2[0][i]);
+              stroke2[1][i] = Math.floor(stroke2[1][i]);
+            }
+          
         }
         
         //get the bounding box coords
@@ -166,6 +167,11 @@
       
       window.addEventListener("mousedown", mouseDown);
       window.addEventListener("mouseup", mouseUp);
+
+      //disable right click to prevent errors
+      window.addEventListener('contextmenu', (event) => {
+        event.preventDefault()
+      })
 
       //re-rolls the prompt
       function newPrompt(){

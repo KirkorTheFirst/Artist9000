@@ -28,6 +28,11 @@
         window.location.href = 'sketch.html';
       }
 
+      //disable right click to prevent errors
+      window.addEventListener('contextmenu', (event) => {
+        event.preventDefault()
+      })
+
     </script>
   </body>
 </html>
