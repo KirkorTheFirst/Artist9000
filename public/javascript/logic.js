@@ -232,13 +232,15 @@ function getDrawingData(drawing, ctx){
     if (r == back[0] && g == back[1] && b == back[2]){
       rtn2.push(true);
     } else {
-      //TODO: fix
       //check if the pixel is a "lighter" or "darker" color
-      if ((r + g + b) / 6 > lightnessThreshold){
-        //its "darker"
+
+      let hsp = getHSP(r, g, b);
+
+      if (hsp > lightnessThreshold){
+        //it is light
         rtn2.push(true);
       } else {
-        //its "lighter"
+        //it is dark
         rtn2.push(false);
       }
       
@@ -249,4 +251,26 @@ function getDrawingData(drawing, ctx){
   //return array
   return rtn2;
 
+}
+
+/**
+ * get HSP (hue-saturation-percieved brightness), like a black-and-white value for how bright the color is
+ * @param {Number} r red value of color
+ * @param {Number} g green value of color
+ * @param {Number} b blue value of color
+ * @returns HSP value for that color
+ */
+function getHSP(r, g, b){
+  
+  //concept, equation, constants from http://alienryderflex.com/hsp.html
+  //these are the degrees to which your eye processes each color (as percentages which add up to 1, or 100%) 
+  const r_perception = 0.299;
+  const g_perception = 0.587;
+  const b_perception = 0.114;
+  let hsp = Math.sqrt(
+    r_perception * (r * r) +
+    g_perception * (g * g) +
+    b_perception * (b * b)
+  );
+  return hsp;
 }

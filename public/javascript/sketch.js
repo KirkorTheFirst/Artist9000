@@ -269,7 +269,7 @@ function drawAvg(strokes){
     for (let stroke2 of strokes){
         let prevX;
         let prevY;
-        stroke(255, 0, 0);
+        stroke(0, 0, 0,);
         for (let i = 0; i < stroke2[0].length; i++){
             let x = stroke2[0][i];
             let y = stroke2[1][i];
